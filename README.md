@@ -10,7 +10,7 @@ directly from their hard drives.
 
 Please note that DiscCheckEmu works only for games and software that employs standard disc checks: old disc-based protections
 like SafeDisc, SecuROM or LaserLock are not (and will not be) supported by this software. This is due to the nature that these
-protections that use advance encrypting and IAT obfuscation.
+protections that use segment encryption and IAT obfuscation.
 
 ## Features
 

@@ -7,7 +7,7 @@
 "Hook/GetDriveTypeA.h"
 "Hook/GetVolumeInformationA.h"
 "Version.h"
-"Res/Resources.rc" "Hook/CreateFileA.h" "Hook/GetFileAttributesA.h" "Util/StringUtils.h" "Util/StringUtils.cpp" "Hook/mciSendCommand.h" "APIConfig/MciSendCommandConfig.h")
+"Res/Resources.rc" "Hook/CreateFileA.h" "Hook/GetFileAttributesA.h" "Util/StringUtils.h" "Util/StringUtils.cpp" "Hook/mciSendCommand.h" "APIConfig/MciSendCommandConfig.h" "Hook/GetLogicalDrives.h")
 
 
 target_link_libraries(DCEAPIHook PUBLIC detours yaml-cpp winmm.lib)

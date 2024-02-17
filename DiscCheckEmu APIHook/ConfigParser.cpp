@@ -31,6 +31,16 @@ namespace DCE {
 	{
 		APIConfig apiConfig = APIConfig();
 
+		YAML::Node virtualDrives = config["virtual_drives"];
+
+		for (std::size_t i = 0; i < virtualDrives.size(); ++i) {
+			char virtualDrive = std::toupper(virtualDrives[i].as<char>());
+			if (virtualDrive >= 0x41 && virtualDrive <= 0x5A)
+				apiConfig.virtualDrives.push_back(virtualDrive);
+			else
+				throw std::exception("Error: Unable to correctly parse virtual_drives node");
+		}
+
 		YAML::Node hooks = config["hooks"];
 
 		for (const auto& hook : hooks) {

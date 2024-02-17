@@ -26,6 +26,7 @@
 #include "Hook/CreateFileA.h"
 #include "Hook/GetFileAttributesA.h"
 #include "Hook/mciSendCommand.h"
+#include "Hook/GetLogicalDrives.h"
 
 void installHooks()
 {
@@ -40,6 +41,8 @@ void installHooks()
     }
     if (apiConfig.mciSendCommandConfigs.size() > 0)
         DetourAttach(&(PVOID&)OGmciSendCommand, HookedmciSendCommand);
+    if (apiConfig.virtualDrives.size() > 0)
+        DetourAttach(&(PVOID&)OGGetLogicalDrives, HookedGetLogicalDrives);
 }
 
 void uninstallHooks()
@@ -55,6 +58,8 @@ void uninstallHooks()
     }
     if (apiConfig.mciSendCommandConfigs.size() > 0)
         DetourDetach(&(PVOID&)OGmciSendCommand, HookedmciSendCommand);
+    if (apiConfig.virtualDrives.size() > 0)
+        DetourDetach(&(PVOID&)OGGetLogicalDrives, HookedGetLogicalDrives);
 }
 
 

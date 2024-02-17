@@ -19,20 +19,18 @@
 
 #pragma once
 
-#include <vector>
-#include <unordered_map>
-#include "APIConfig/GetDriveAConfig.h"
-#include "APIConfig/GetVolumeInformationAConfig.h"
-#include "APIConfig/MciSendCommandConfig.h"
+#include <Windows.h>
+#include "..\ApiHook.h"
 
-namespace DCE {
-	class APIConfig
+static DWORD(WINAPI* OGGetLogicalDrives)() = GetLogicalDrives;
+
+DWORD WINAPI HookedGetLogicalDrives()
+{
+	DWORD drivesMap = OGGetLogicalDrives();
+	for(char drive: apiConfig.virtualDrives)
 	{
-	public:
-		std::vector<DCE::GetDriveAConfig> getDriveAConfigs;
-		std::vector<DCE::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
-		std::vector<DCE::MciSendCommandConfig> mciSendCommandConfigs;
-		std::unordered_map<std::string, std::string> fileRedirections;
-		std::vector<char> virtualDrives;
-	};
+		drivesMap |= (1 << (drive - 'A'));
+	}
+
+	return drivesMap;
 }

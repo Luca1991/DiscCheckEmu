@@ -19,19 +19,36 @@
 
 #pragma once
 
-#include <vector>
-#include <unordered_map>
-#include "APIConfig/GetDriveAConfig.h"
-#include "APIConfig/GetVolumeInformationAConfig.h"
-#include "APIConfig/MciSendCommandConfig.h"
+#include <Windows.h>
+#include "..\ApiHook.h"
 
-namespace DCE {
-	class APIConfig
+
+static MCIERROR(WINAPI* OGmciSendCommand)(
+	MCIDEVICEID IDDevice,
+	UINT        uMsg,
+	DWORD_PTR   fdwCommand,
+	DWORD_PTR   dwParam) = mciSendCommand;
+
+
+MCIERROR WINAPI HookedmciSendCommand(
+	MCIDEVICEID IDDevice,
+	UINT        uMsg,
+	DWORD_PTR   fdwCommand,
+	DWORD_PTR   dwParam)
+{
+
+	for (DCE::MciSendCommandConfig conf : apiConfig.mciSendCommandConfigs)
 	{
-	public:
-		std::vector<DCE::GetDriveAConfig> getDriveAConfigs;
-		std::vector<DCE::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
-		std::vector<DCE::MciSendCommandConfig> mciSendCommandConfigs;
-		std::unordered_map<std::string, std::string> fileRedirections;
-	};
+		if (uMsg == conf.uMsg)
+		{
+			if (uMsg == MCI_STATUS){
+				MCI_STATUS_PARMS* par = reinterpret_cast<MCI_STATUS_PARMS*>(dwParam);
+				par->dwReturn = conf.lpStatusDwReturn;
+			}
+
+			return conf.returnValue;
+		}
+	}
+
+	return OGmciSendCommand(IDDevice, uMsg, fdwCommand, dwParam);
 }

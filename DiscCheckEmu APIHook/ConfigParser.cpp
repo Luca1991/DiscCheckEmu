@@ -18,6 +18,7 @@
 */
 
 #include "ConfigParser.h"
+#include "Util/StringUtils.h"
 
 
 namespace DCE {
@@ -28,8 +29,9 @@ namespace DCE {
 
 	APIConfig ConfigParser::parseHooks()
 	{
-		YAML::Node hooks = config["hooks"];
 		APIConfig apiConfig = APIConfig();
+
+		YAML::Node hooks = config["hooks"];
 
 		for (const auto& hook : hooks) {
 			std::string api = hook["api"].as<std::string>();
@@ -58,8 +60,28 @@ namespace DCE {
 						hook["return"].as<bool>()
 				));
 			}
+			else if (api == "mciSendCommand")
+			{
+				MciSendCommandConfig mciSendCommandConfig = MciSendCommandConfig(
+					hook["arg2"].as<std::uint32_t>(),
+					hook["return"].as<std::uint32_t>()
+				);
+
+				if (hook["status_return"].IsDefined())
+					mciSendCommandConfig.lpStatusDwReturn = hook["status_return"].as<std::uint32_t>();
+
+				apiConfig.mciSendCommandConfigs.push_back(mciSendCommandConfig);
+			}
 			else
 				throw std::exception("Error: Unknown or unsupported API found");
+		}
+
+		YAML::Node fileRedirections = config["file_redirections"];
+
+		for (const auto& fileRedirection : fileRedirections) {
+			std::string source = string_utils::toLowercase(fileRedirection["source"].as<std::string>());
+			std::string destination = string_utils::toLowercase(fileRedirection["destination"].as<std::string>());
+			apiConfig.fileRedirections[source] = destination;
 		}
 
 		return apiConfig;

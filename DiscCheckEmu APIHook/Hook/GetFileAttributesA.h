@@ -19,19 +19,21 @@
 
 #pragma once
 
-#include <vector>
-#include <unordered_map>
-#include "APIConfig/GetDriveAConfig.h"
-#include "APIConfig/GetVolumeInformationAConfig.h"
-#include "APIConfig/MciSendCommandConfig.h"
+#include <Windows.h>
+#include <strsafe.h>
+#include "..\ApiHook.h"
+#include "..\Util\StringUtils.h"
 
-namespace DCE {
-	class APIConfig
+static DWORD(WINAPI* OGGetFileAttributesA)(
+	LPCSTR lpFileName) = GetFileAttributesA;
+
+DWORD WINAPI HookedGetFileAttributesA(LPCSTR lpFileName)
+{
+	auto it = apiConfig.fileRedirections.find(string_utils::toLowercase(lpFileName));
+	if (it != apiConfig.fileRedirections.end())
 	{
-	public:
-		std::vector<DCE::GetDriveAConfig> getDriveAConfigs;
-		std::vector<DCE::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
-		std::vector<DCE::MciSendCommandConfig> mciSendCommandConfigs;
-		std::unordered_map<std::string, std::string> fileRedirections;
-	};
+		lpFileName = it->second.c_str();
+	}
+
+	return OGGetFileAttributesA(lpFileName);
 }

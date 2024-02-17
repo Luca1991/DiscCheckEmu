@@ -19,19 +19,16 @@
 
 #pragma once
 
-#include <vector>
-#include <unordered_map>
-#include "APIConfig/GetDriveAConfig.h"
-#include "APIConfig/GetVolumeInformationAConfig.h"
-#include "APIConfig/MciSendCommandConfig.h"
+#include <Windows.h>
 
 namespace DCE {
-	class APIConfig
+	struct MciSendCommandConfig
 	{
-	public:
-		std::vector<DCE::GetDriveAConfig> getDriveAConfigs;
-		std::vector<DCE::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
-		std::vector<DCE::MciSendCommandConfig> mciSendCommandConfigs;
-		std::unordered_map<std::string, std::string> fileRedirections;
+		UINT uMsg;
+		DWORD lpStatusDwReturn; // Only used in MCI_STATUS
+		MCIERROR returnValue;
+
+		MciSendCommandConfig(UINT uMsg, MCIERROR returnValue)
+			: uMsg(uMsg), lpStatusDwReturn(0), returnValue(returnValue) { }
 	};
 }

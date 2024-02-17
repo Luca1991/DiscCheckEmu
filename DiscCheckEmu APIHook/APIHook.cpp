@@ -23,6 +23,9 @@
 #include "ConfigParser.h"
 #include "Hook/GetDriveTypeA.h"
 #include "Hook/GetVolumeInformationA.h"
+#include "Hook/CreateFileA.h"
+#include "Hook/GetFileAttributesA.h"
+#include "Hook/mciSendCommand.h"
 
 void installHooks()
 {
@@ -30,6 +33,13 @@ void installHooks()
         DetourAttach(&(PVOID&)OGGetDriveTypeA, HookedGetDriveTypeA);
     if(apiConfig.getVolumeInformationAConfigs.size() > 0)
         DetourAttach(&(PVOID&)OGGetVolumeInformationA, HookedGetVolumeInformationA);
+    if (apiConfig.fileRedirections.size() > 0)
+    {
+        DetourAttach(&(PVOID&)OGCreateFileA, HookedCreateFileA);
+        DetourAttach(&(PVOID&)OGGetFileAttributesA, HookedGetFileAttributesA);
+    }
+    if (apiConfig.mciSendCommandConfigs.size() > 0)
+        DetourAttach(&(PVOID&)OGmciSendCommand, HookedmciSendCommand);
 }
 
 void uninstallHooks()
@@ -38,6 +48,13 @@ void uninstallHooks()
         DetourDetach(&(PVOID&)OGGetDriveTypeA, HookedGetDriveTypeA);
     if (apiConfig.getVolumeInformationAConfigs.size() > 0)
         DetourDetach(&(PVOID&)OGGetVolumeInformationA, HookedGetVolumeInformationA);
+    if (apiConfig.fileRedirections.size() > 0)
+    {
+        DetourDetach(&(PVOID&)OGCreateFileA, HookedCreateFileA);
+        DetourDetach(&(PVOID&)OGGetFileAttributesA, HookedGetFileAttributesA);
+    }
+    if (apiConfig.mciSendCommandConfigs.size() > 0)
+        DetourDetach(&(PVOID&)OGmciSendCommand, HookedmciSendCommand);
 }
 
 

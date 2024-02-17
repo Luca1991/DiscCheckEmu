@@ -15,6 +15,7 @@ protections that use segment encryption and IAT obfuscation.
 ## Features
 
 * Intercept API calls and modify their behavior without patching the executable.
+* File redirection.
 * Utilize a generic API hooking engine configurable through YAML files.
 * Easy to use injector for automatically creating the target process and injecting the DLL.
 * Fully open-source and customizable to suit individual needs.

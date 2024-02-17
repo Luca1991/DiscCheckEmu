@@ -7,10 +7,10 @@
 "Hook/GetDriveTypeA.h"
 "Hook/GetVolumeInformationA.h"
 "Version.h"
-"Res/Resources.rc")
+"Res/Resources.rc" "Hook/CreateFileA.h" "Hook/GetFileAttributesA.h" "Util/StringUtils.h" "Util/StringUtils.cpp" "Hook/mciSendCommand.h" "APIConfig/MciSendCommandConfig.h")
 
 
-target_link_libraries(DCEAPIHook PUBLIC detours yaml-cpp)
+target_link_libraries(DCEAPIHook PUBLIC detours yaml-cpp winmm.lib)
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET DCEAPIHook PROPERTY CXX_STANDARD 20)

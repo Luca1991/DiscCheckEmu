@@ -22,7 +22,7 @@
 #include <iostream>
 #include <yaml-cpp/yaml.h>
 
-namespace DCE {
+namespace dce {
     class ConfigParser
     {
     private:

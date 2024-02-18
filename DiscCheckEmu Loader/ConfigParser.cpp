@@ -19,7 +19,7 @@
 
 #include "ConfigParser.h"
 
-namespace DCE {
+namespace dce {
 	ConfigParser::ConfigParser(const std::string& fileName)
 	{
 		config = YAML::LoadFile(fileName);

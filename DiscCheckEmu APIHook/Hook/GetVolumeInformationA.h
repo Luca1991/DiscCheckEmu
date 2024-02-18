@@ -37,7 +37,7 @@ BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
     LPDWORD lpFileSystemFlags, LPSTR lpFileSystemNameBuffer,
     DWORD nFileSystemNameSize)
 {
-    for (DCE::GetVolumeInformationAConfig conf : apiConfig.getVolumeInformationAConfigs)
+    for (dce::GetVolumeInformationAConfig conf : apiConfig.getVolumeInformationAConfigs)
     {
         if (lstrcmp(lpRootPathName, conf.lpRootPathName.c_str()) == 0)
         {

@@ -21,4 +21,4 @@
 
 #include "APIConfig.h"
 
-DCE::APIConfig apiConfig;
+dce::APIConfig apiConfig;

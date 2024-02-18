@@ -20,7 +20,7 @@
 #include "Injector.h"
 #include <psapi.h> 
 
-namespace DCE {
+namespace dce {
 
 	Injector::Injector(const std::string& targetName, const std::string& dllName)
 	{

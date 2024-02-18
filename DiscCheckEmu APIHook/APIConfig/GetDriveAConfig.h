@@ -21,7 +21,7 @@
 
 #include <iostream>
 
-namespace DCE {
+namespace dce {
 	struct GetDriveAConfig
 	{
 		std::string lpRootPathName;

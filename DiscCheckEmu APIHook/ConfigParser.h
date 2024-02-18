@@ -23,7 +23,7 @@
 #include <yaml-cpp/yaml.h>
 #include "ApiConfig.h"
 
-namespace DCE {
+namespace dce {
 	class ConfigParser
 	{
 	private:
@@ -32,6 +32,6 @@ namespace DCE {
 	public:
 		ConfigParser(const std::string& fileName);
 
-		DCE::APIConfig parseHooks();
+		dce::APIConfig parseHooks();
 	};
 }

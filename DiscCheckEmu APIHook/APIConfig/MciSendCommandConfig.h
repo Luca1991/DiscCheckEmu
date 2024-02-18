@@ -21,7 +21,7 @@
 
 #include <Windows.h>
 
-namespace DCE {
+namespace dce {
 	struct MciSendCommandConfig
 	{
 		UINT uMsg;

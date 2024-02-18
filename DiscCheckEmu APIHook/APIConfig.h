@@ -25,13 +25,13 @@
 #include "APIConfig/GetVolumeInformationAConfig.h"
 #include "APIConfig/MciSendCommandConfig.h"
 
-namespace DCE {
+namespace dce {
 	class APIConfig
 	{
 	public:
-		std::vector<DCE::GetDriveAConfig> getDriveAConfigs;
-		std::vector<DCE::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
-		std::vector<DCE::MciSendCommandConfig> mciSendCommandConfigs;
+		std::vector<dce::GetDriveAConfig> getDriveAConfigs;
+		std::vector<dce::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
+		std::vector<dce::MciSendCommandConfig> mciSendCommandConfigs;
 		std::unordered_map<std::string, std::string> fileRedirections;
 		std::vector<char> virtualDrives;
 	};

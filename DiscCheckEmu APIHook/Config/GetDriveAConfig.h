@@ -19,16 +19,15 @@
 
 #pragma once
 
-#include <Windows.h>
+#include <iostream>
 
-namespace DCE {
-	struct MciSendCommandConfig
+namespace dce {
+	struct GetDriveAConfig
 	{
-		UINT uMsg;
-		DWORD lpStatusDwReturn; // Only used in MCI_STATUS
-		MCIERROR returnValue;
+		std::string lpRootPathName;
+		int returnValue;
 
-		MciSendCommandConfig(UINT uMsg, MCIERROR returnValue)
-			: uMsg(uMsg), lpStatusDwReturn(0), returnValue(returnValue) { }
+		GetDriveAConfig(const std::string& lpRootPathName, int returnValue)
+			: lpRootPathName(lpRootPathName), returnValue(returnValue) { }
 	};
 }

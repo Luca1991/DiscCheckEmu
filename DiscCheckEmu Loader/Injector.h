@@ -22,7 +22,7 @@
 #include <Windows.h>
 #include <iostream>
 
-namespace DCE {
+namespace dce {
     class Injector
     {
     private:

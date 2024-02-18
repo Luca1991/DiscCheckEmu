@@ -20,7 +20,7 @@
 #include "APIHook.h"
 #include <Windows.h>
 #include <detours/detours.h>
-#include "ConfigParser.h"
+#include "Config/ConfigParser.h"
 #include "Hook/GetDriveTypeA.h"
 #include "Hook/GetVolumeInformationA.h"
 #include "Hook/CreateFileA.h"
@@ -71,7 +71,7 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
 
     if (dwReason == DLL_PROCESS_ATTACH) {
         try {
-            DCE::ConfigParser conf = DCE::ConfigParser("DCEConfig.yaml");
+            dce::ConfigParser conf = dce::ConfigParser("DCEConfig.yaml");
             apiConfig = conf.parseHooks();
         }
         catch (std::exception e)

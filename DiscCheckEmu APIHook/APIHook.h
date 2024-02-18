@@ -19,6 +19,6 @@
 
 #pragma once
 
-#include "APIConfig.h"
+#include "Config/APIConfig.h"
 
-DCE::APIConfig apiConfig;
+dce::APIConfig apiConfig;

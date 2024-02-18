@@ -18,10 +18,10 @@
 */
 
 #include "ConfigParser.h"
-#include "Util/StringUtils.h"
+#include "../Util/StringUtils.h"
 
 
-namespace DCE {
+namespace dce {
 	ConfigParser::ConfigParser(const std::string& fileName)
 	{
 		config = YAML::LoadFile(fileName);

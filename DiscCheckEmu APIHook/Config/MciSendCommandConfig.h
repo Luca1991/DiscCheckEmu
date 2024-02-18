@@ -19,19 +19,16 @@
 
 #pragma once
 
-#include <iostream>
-#include <yaml-cpp/yaml.h>
-#include "ApiConfig.h"
+#include <Windows.h>
 
-namespace DCE {
-	class ConfigParser
+namespace dce {
+	struct MciSendCommandConfig
 	{
-	private:
-		YAML::Node config;
+		UINT uMsg;
+		DWORD lpStatusDwReturn; // Only used in MCI_STATUS
+		MCIERROR returnValue;
 
-	public:
-		ConfigParser(const std::string& fileName);
-
-		DCE::APIConfig parseHooks();
+		MciSendCommandConfig(UINT uMsg, MCIERROR returnValue)
+			: uMsg(uMsg), lpStatusDwReturn(0), returnValue(returnValue) { }
 	};
 }

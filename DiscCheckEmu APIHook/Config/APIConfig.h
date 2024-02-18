@@ -19,15 +19,19 @@
 
 #pragma once
 
-#include <iostream>
+#include <vector>
+#include <unordered_map>
+#include "GetDriveAConfig.h"
+#include "GetVolumeInformationAConfig.h"
+#include "MciSendCommandConfig.h"
 
-namespace DCE {
-	struct GetDriveAConfig
+namespace dce {
+	struct APIConfig
 	{
-		std::string lpRootPathName;
-		int returnValue;
-
-		GetDriveAConfig(const std::string& lpRootPathName, int returnValue)
-			: lpRootPathName(lpRootPathName), returnValue(returnValue) { }
+		std::vector<dce::GetDriveAConfig> getDriveAConfigs;
+		std::vector<dce::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
+		std::vector<dce::MciSendCommandConfig> mciSendCommandConfigs;
+		std::unordered_map<std::string, std::string> fileRedirections;
+		std::vector<char> virtualDrives;
 	};
 }

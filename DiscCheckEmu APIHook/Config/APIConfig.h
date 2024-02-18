@@ -21,14 +21,13 @@
 
 #include <vector>
 #include <unordered_map>
-#include "APIConfig/GetDriveAConfig.h"
-#include "APIConfig/GetVolumeInformationAConfig.h"
-#include "APIConfig/MciSendCommandConfig.h"
+#include "GetDriveAConfig.h"
+#include "GetVolumeInformationAConfig.h"
+#include "MciSendCommandConfig.h"
 
 namespace dce {
-	class APIConfig
+	struct APIConfig
 	{
-	public:
 		std::vector<dce::GetDriveAConfig> getDriveAConfigs;
 		std::vector<dce::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
 		std::vector<dce::MciSendCommandConfig> mciSendCommandConfigs;

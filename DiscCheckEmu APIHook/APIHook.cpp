@@ -20,7 +20,7 @@
 #include "APIHook.h"
 #include <Windows.h>
 #include <detours/detours.h>
-#include "ConfigParser.h"
+#include "Config/ConfigParser.h"
 #include "Hook/GetDriveTypeA.h"
 #include "Hook/GetVolumeInformationA.h"
 #include "Hook/CreateFileA.h"

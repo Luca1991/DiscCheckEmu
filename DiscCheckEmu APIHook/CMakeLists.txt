@@ -1,13 +1,13 @@
 ﻿add_library (DCEAPIHook SHARED "APIHook.cpp"
 "APIHook.h"
-"ConfigParser.cpp"
-"ConfigParser.h"
-"APIConfig/GetDriveAConfig.h"
-"APIConfig/GetVolumeInformationAConfig.h"
+"Config/ConfigParser.cpp"
+"Config/ConfigParser.h"
+"Config/GetDriveAConfig.h"
+"Config/GetVolumeInformationAConfig.h"
 "Hook/GetDriveTypeA.h"
 "Hook/GetVolumeInformationA.h"
 "Version.h"
-"Res/Resources.rc" "Hook/CreateFileA.h" "Hook/GetFileAttributesA.h" "Util/StringUtils.h" "Util/StringUtils.cpp" "Hook/mciSendCommand.h" "APIConfig/MciSendCommandConfig.h" "Hook/GetLogicalDrives.h")
+"Res/Resources.rc" "Hook/CreateFileA.h" "Hook/GetFileAttributesA.h" "Util/StringUtils.h" "Util/StringUtils.cpp" "Hook/mciSendCommand.h" "Config/MciSendCommandConfig.h" "Hook/GetLogicalDrives.h")
 
 
 target_link_libraries(DCEAPIHook PUBLIC detours yaml-cpp winmm.lib)

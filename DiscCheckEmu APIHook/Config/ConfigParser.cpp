@@ -18,7 +18,7 @@
 */
 
 #include "ConfigParser.h"
-#include "Util/StringUtils.h"
+#include "../Util/StringUtils.h"
 
 
 namespace dce {

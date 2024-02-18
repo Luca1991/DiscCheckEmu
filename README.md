@@ -6,7 +6,7 @@ experience for users looking to enjoy their favorite legacy software without the
 
 As computers increasingly lack CD-ROM drives, accessing old disc-based games and software has become impractical.
 DiscCheckEmu addresses this issue by allowing users to emulate disc checks, enabling them to run their favorite titles
-directly from their hard drives.
+directly from their hard drives and without physically patching the game executable.
 
 Please note that DiscCheckEmu works only for games and software that employs standard disc checks: old disc-based protections
 like SafeDisc, SecuROM or LaserLock are not (and will not be) supported by this software. This is due to the nature that these

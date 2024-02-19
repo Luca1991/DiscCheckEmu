@@ -29,7 +29,7 @@ jobs:
         cp "build/DiscCheckEmu Loader/Release/DCELoader.exe" DCE-x86/
         cp "DCEConfig_TEMPLATE.yaml" DCE-x86/DCEConfig.yaml
         cp "README.md" DCE-x86/README.txt
-        zip -r DiscCheckEmu-${{ github.ref_name }}-x86.zip DCE-x86/DCEAPIHook.dll DCE-x86/DCELoader.exe DCE-x86/DCEConfig.yaml DCE-x86/README.txt 
+        Compress-Archive -Path "DCE-x86/*" -DestinationPath DiscCheckEmu-${{ github.ref_name }}-x86.zip
 
     - name: Release
       uses: softprops/action-gh-release@v1

@@ -1,0 +1,38 @@
+name: Build and Release on Tag
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up MSVC environment
+      uses: microsoft/setup-msbuild@v1
+
+    - name: Configure CMake
+      run: cmake -B build -S .
+
+    - name: Build
+      run: cmake --build build --config Release
+
+    - name: Archive Binaries
+      run: |
+        mkdir DCE-x86
+        cp "build/DiscCheckEmu APIHook/Release/DCEAPIHook.dll" DCE-x86/
+        cp "build/DiscCheckEmu Loader/Release/DCELoader.exe" DCE-x86/
+        cp "DCEConfig_TEMPLATE.yaml" DCE-x86/DCEConfig.yaml
+        cp "README.md" DCE-x86/README.txt
+        zip -r DiscCheckEmu-${{ github.ref_name }}-x86.zip DCE-x86/DCEAPIHook.dll DCE-x86/DCELoader.exe DCE-x86/DCEConfig.yaml DCE-x86/README.txt 
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: DiscCheckEmu-${{ github.ref_name }}-x86.zip

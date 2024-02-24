@@ -1,0 +1,228 @@
+DCEConfig.yaml serve as a blueprint instruction both DCELoader and DCEAPIHook on how to operate.
+This document contains:
+* a list of some suggested software to gain information about your target process.
+* some configuration examples.
+* a list of allowed keyword/commands in a DCEConfiguration file.
+* a list of the currently hookable APIs and their supported parameters.
+
+## Suggested software
+
+To be able to successfully write a DCE configuration file you need to gain knowledge about the specific game/software requirements.
+This can be as easy as reading the volume label in file manager or more complex up to debugging the target process to understand its requirements.
+Here are some ideas/techniques/software to help you to gain such knowledge.
+
+### File Manager (explorer.exe)
+
+As already said the most obvious thing to do is to obtain the volume name. Insert the original game disc and go to "My PC", then take note of the label used by the disc volume.
+
+### API Monitors
+
+To be able to easily obtain a list of the API called by the game/software you are writing a rule for, you will need a way to monitor its behavior.
+Many software are able to record API access from a target process.
+Here are some easy-to-use tools:
+
+* [Process Monitor](https://learn.microsoft.com/it-it/sysinternals/downloads/procmon): Freeware.
+* [API Monitor](http://www.rohitab.com/apimonitor): Freeware.
+* APIS32 (AKA API SPY): Commercial. No longer being developed nor sold.
+
+Please refer to the documentation of each of these software tools.
+
+### Debuggers
+
+This is the most powerful way to gain knowledge from a process.
+Using this software requires knowledge of both low-level programming and OS internals, but such not-so-easy-to-obtain skills are paid in full by the control you will get from EVERY binary running on your machine.
+Some well known debuggers:
+
+* [x64dbg/x32dbg](https://x64dbg.com/): Open source. 
+* [Ollydbg](https://www.ollydbg.de/): Freeware. No longer developed.
+* [IDA Free](https://hex-rays.com/ida-free/): Freeware. It is a disassembler but comes with debugging facilities too.
+* [Binary Ninja](https://binary.ninja/): Commercial. Like IDA, this is a disassembler but features debugging capabilies too.
+* [BugChecker](https://github.com/vitoplantamura/BugChecker): Open source. RING 0 DEBUGGER working on Windows 11! If you was a SoftICE fan (like me) this is the way to go!
+
+Using a debugger is surely the most complex way to gain the required information needed to write a DCE configuration, but sometimes is the only way. And, for what it's worth, is my favourite way :)
+
+## Configuration Examples
+
+### Example 1: an easy example 
+
+Scenario: Let's suppose to have installed a game that during launch check the presence of a CD-ROM labeled "AWESOME_GAME". The main executable of such game is named "AG.exe". The game is not going to load any file from the CD-ROM.
+
+Let's write a DCEConfig.yaml for this scenario:
+
+```
+loader:
+  target: "AG.exe" 
+
+virtual_drives: ['L']
+
+hooks:
+  - api: "GetDriveTypeA"
+    arg1: "L:\\"
+    return: 5 # DRIVE_CDROM
+  - api: "GetVolumeInformationA"
+    arg1: "L:\\"
+    arg2: "AWESOME_GAME"
+    return: true
+```
+
+So, we told to DCELoader to create a process using AG.exe. DCEAPIHook.dll will be injected in this process right after it creation.
+We then defined a virtual drive, L. Defining a virtual drive will automatically create an hook to the GetLogicalDrives API and the presence of such defined drive will be spoofed.
+We then have requested two hooks. The first one is hooking GetDriveTypeA: once the software will call this API passing the value "L:\\", DCE will intercept it and returns the value 5, that is DRIVE_CDROM, causing the game to think that this drive is actually a CD-ROM drive. The second hook is against GetVolumeInformationA: this API is used to retrieve the label of the disc inserted in the corresponding drive (if any), so once the game will call this api passing the value "L:\\", DCE will write "AWSOME_GAME" to the second param (lpVolumeNameBuffer) making the software to think that such labeled disc is actually inserted in the 'L' drive. Finally "true" value is returned.
+
+Writing configurations for this type of software is super easy, as you only need to know the label of the required disc.
+
+### Example 2: File redirection
+
+Scenario: Let's suppose to have installed a game that during launch check the presence of a CD-ROM labeled "INCREDIBLE_GAME". The main executable of such game is named "IG.exe". The game will laod two important files from the CD-ROM: "X:\\Stuff\\DATA0.DAT" and "X:\\Stuff\\DATA1.DAT" (where X is the drive letter).
+
+We can use the file-redirection feature of DCE to easily write a DCEConfig.yaml file for this game:
+
+```
+# Remember to copy \Stuff\DATA0.DAT
+# and \Stuff\DATA1.DAT from the
+# original game disc to the 
+# installation directory!
+
+loader:
+  target: "IG.exe" 
+
+virtual_drives: ['L']
+
+hooks:
+  - api: "GetDriveTypeA"
+    arg1: "L:\\"
+    return: 5 # DRIVE_CDROM
+  - api: "GetVolumeInformationA"
+    arg1: "L:\\"
+    arg2: "INCREDIBLE_GAME"
+    return: true
+
+file_redirections:
+  - source: "L:\\Stuff\\DATA0.DAT"
+    destination: ".\\Stuff\\DATA0.DAT"
+  - source: "L:\\Stuff\\DATA1.DAT"
+    destination: ".\\Stuff\\DATA1.DAT"
+``` 
+
+We already covered in the previous example the "loader", "virtual_drive" and "hooks" stuff. Let's focus on the new entry: "file_redirections". This list is used to let DCE knows what file acess to redirect and where.
+We know that the game will try to access these two files located to the CD-ROM, but since we don't want to keep the original disc inserted, we copied to the game installation directory (we also added a comment to our configuration file to keep it in mind for the future). When we add a source and destination parameters for each of these files , DCE will automatically create an hook against the CreateFileA API, altering on the fly the path of the file being accessed (source) with the destionation string. When the game will try to access these two files on the disc, it will actually access the ones copied to the game directory on the HDD.
+
+### Example 3: hooking more APIs
+
+Scenario: Let's suppose to have installed a game that during launch check the presence of a CD-ROM labeled "SUPER_GAME". The main executable of such game is named "SG.exe". This game is not loading any data from the disc, but it will use a somewhat weird method to check the presence of the original game disc: the mciSendCommand API.
+
+Despite this hacky way to carry a cd-check, writing a config file is pretty easy:
+
+```
+loader:
+  target: "SG.exe" 
+
+virtual_drives: ['L']
+
+hooks:
+  - api: "GetDriveTypeA"
+    arg1: "L:\\"
+    return: 5 # DRIVE_CDROM
+  - api: "mciSendCommand"
+    arg2: 0x803 #MCI_OPEN
+    return: 0
+  - api: "mciSendCommand"
+    arg2: 0x814 #MCI_STATUS
+    status_return: 1 # SUCCESS
+    return: 0
+```
+
+The new entry here are the two mciSendCommand hooks. Due to the way mciSendCommand works (please refer to the official Microsoft documentation) the hook implementation for this API is a bit hacky too. The first hook will be triggered when arg2 is 0x803 (ie, the MCI_OPEN command), bypassing the API call and returning 0.
+The second mciSendCommand hook will be fired when the second argument is equals to 0x814 (MCI_STATUS): after calling this API the game is passing a MCI_STATUS_PARMS as the fourth parameter to this API and it expects to receive a valid and filled MCI_STATUS_PARMS to that address. The "status_return" is instructing the hook to put 1 as the value of dwReturn filed of this MCI_STATUS_PARMS. This is enough to make the game happy.
+
+## DCEConfig commands
+
+In your DCEConfig.yaml files you can use the following commands:
+
+loader->target: defines the process to be created. DCEAPIHook.dll will be injected there.
+
+virtual_drives: this is an array of desired fake drives. Adding a lected to this list will automatically reports the presence of such drive when the software calls GetLogicalDrives API.
+
+hooks: this is the list of the desired hooks. Once DCEAPIHook.dll in injected in the target process, every API configured here will be hooked. Multiple hooks for each API are allowed. Please consult the "Supported APIs" part of this document for a list of supported APIs and their allowed parameters and return values.
+
+file_redirections: this is a list of the desired file redirections. Each entry in this list is composed by a source value, ie the original file path that the game uses, and a destination value, ie where the CreateFileA API will be redirected when trying to access such file.
+
+## Supported API Hooks
+
+This is a list of the currently supported APIs. Each API have its own customizable arguments and return value. Please note that the argument used as trigger is different for each API.
+You should refer to the official Microsoft documentation for a full description of each API argument.
+
+### GetDriveTypeA
+
+GetDriveTypeA signature:
+
+```
+UINT GetDriveTypeA(
+  [in, optional] LPCSTR lpRootPathName
+);
+```
+
+Hook configuration:
+
+- arg1 (lpRootPathName): when this string matches the one passed by the calling code, the hook will be triggered.
+- return: when the hook is triggered, this value will be returned to the calling code.
+
+### GetVolumeInformationA
+
+GetVolumeInformationA signature:
+
+```
+BOOL GetVolumeInformationA(
+  [in, optional]  LPCSTR  lpRootPathName,
+  [out, optional] LPSTR   lpVolumeNameBuffer,
+  [in]            DWORD   nVolumeNameSize,
+  [out, optional] LPDWORD lpVolumeSerialNumber,
+  [out, optional] LPDWORD lpMaximumComponentLength,
+  [out, optional] LPDWORD lpFileSystemFlags,
+  [out, optional] LPSTR   lpFileSystemNameBuffer,
+  [in]            DWORD   nFileSystemNameSize
+);
+```
+
+Hook configuration:
+
+- arg1 (lpRootPathName): when this string matches the one passed by the calling code, the hook will be triggered.
+- arg2 (lpVolumeNameBuffer): this is a string that will be copied to the buffer passed to the function.
+- arg3 (nVolumeNameSize): OPTIONAL. When not specified will be used the same value passed to the function.
+- arg4 (lpVolumeSerialNumber): OPTIONAL. Default to 0.
+- arg5 (lpMaximumComponentLength): OPTIONAL. Default to 0.
+- arg6 (lpFileSystemFlags): OPTIONAL. Default to 0.
+- arg7 (lpFileSystemNameBuffer): OPTIONAL. Default to empty string. This string will be copied to the buffer passed to the function, only if it isn't NULL.
+- arg8 (nFileSystemNameSize): OPTIONAL. When not specified will be used the same value passed to the function.
+- return: the boolean value returned to the calling code.
+
+### mciSendCommand
+
+Due to the way this API works, its hooking implementation is a bit hacky.
+
+mciSendCommand signature:
+
+```
+MCIERROR mciSendCommand(
+   MCIDEVICEID IDDevice,
+   UINT        uMsg,
+   DWORD_PTR   fdwCommand,
+   DWORD_PTR   dwParam
+);
+```
+
+ATTENTION: the dwParam argument is a pointer to a structure that contains parameters for the command message. This structure is different for each uMsg value. Please check the official Microsoft documentation for a full list of supported values and structures.
+
+Hook configuration:
+
+- arg2 (uMsg): when this value (uint32_t) matches the one passed to this API, the hook will be triggered.
+- return: this is the value (uint32_t) returned to the calling code.
+- status_return: *ONLY USED IF uMsg is 0x814 (MCI_STATUS).* This value (uint32_t) will be assigned to the dwReturn field of the MCI_STATUS_PARMS structure passed (as dwParam) to the mciSendCommand API. 
+
+### Other Hook
+
+This is a list of hooks automatically created by DCE, but not directly configurable via configuration file:
+
+* CreateFileA: this hook will be automatically created when using the file redirection feature.
+* GetFileAttributesA: this hook will be automatically created when using the file redirection feature.
+* GetLogicalDrives: this hook will be created when at least one virtual drive is specified in virtual_drives array.

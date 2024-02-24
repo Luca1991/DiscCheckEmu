@@ -31,7 +31,7 @@ protections that use segment encryption and IAT obfuscation.
 
 DCEConfig serves as the blueprint for configuring both DCELoader and DCEAPIHook. This file must be customized by
 the user for each target software, detailing API hooking and process creation parameters. Refer to the
-DCEConfig Scripting Guide for assistance in creating a functional configuration file.
+ConfigurationDocumentation file for assistance in writing a functional configuration file.
 
 ## Building
 

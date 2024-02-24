@@ -38,6 +38,12 @@ ConfigurationDocumentation file for assistance in writing a functional configura
 This project utilizes CMake. To build it, install Visual Studio 2022 with C++ packages and load the project 
 as a CMake solution. Once loaded, press F7 to build the solution.
 
+## How to use
+
+Download the latest release from the download section and extract the archive.
+Copy DCELoader.exe, DCEAPIHook.dll and DCEConfig.yaml to your game/software installation directory.
+Edit DCEConfig.yaml writing a configuration for your target, then run DCELoader.exe and enjoy.
+
 ## Acknowledgements
 
 * Microsoft: For developing the Detours library used in this project.

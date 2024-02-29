@@ -4,6 +4,6 @@ project ("DiscCheckEmu")
 
 include("CPM.cmake")
 
-add_subdirectory ("DiscCheckEmu APIHook")
-add_subdirectory ("DiscCheckEmu Loader")
+add_subdirectory ("DiscCheckEmuAPIHook")
+add_subdirectory ("DiscCheckEmuLoader")
 

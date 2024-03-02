@@ -8,9 +8,12 @@ As computers increasingly lack CD-ROM drives, accessing old disc-based games and
 DiscCheckEmu addresses this issue by allowing users to emulate disc checks, enabling them to run their favorite titles
 directly from their hard drives, without physically patching the game executable.
 
-Please note that DiscCheckEmu works only for games and software that employs standard disc checks: old disc-based protections
+Please note that DiscCheckEmu works only for games and software that employs standard disc checks and/or passive copy protections: old "active" disc-based protections
 like SafeDisc, SecuROM or LaserLock are not (and will not be) supported by this software. This is due to the nature that these
-protections that use segment encryption and IAT obfuscation.
+protections that use segment encryption and IAT obfuscation. This is a list of copy protections that are known to be successfully handled by DCE:
+
+* [engine32](https://github.com/TheRogueArchivist/DRML/blob/main/entries/engine32/engine32.md)
+
 
 ## Features
 

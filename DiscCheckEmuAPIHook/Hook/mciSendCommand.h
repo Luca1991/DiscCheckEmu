@@ -37,7 +37,7 @@ MCIERROR WINAPI HookedmciSendCommand(
 	DWORD_PTR   dwParam)
 {
 
-	for (dce::MciSendCommandConfig conf : apiConfig.mciSendCommandConfigs)
+	for (const dce::MciSendCommandConfig& conf : apiConfig.mciSendCommandConfigs)
 	{
 		if (uMsg == conf.uMsg)
 		{

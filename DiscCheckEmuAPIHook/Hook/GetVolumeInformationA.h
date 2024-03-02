@@ -20,7 +20,7 @@
 #pragma once
 
 #include <Windows.h>
-#include <strsafe.h>
+#include <algorithm>
 #include "..\ApiHook.h"
 
 static BOOL(WINAPI* OGGetVolumeInformationA)(LPCSTR lpRootPathName,
@@ -29,32 +29,30 @@ static BOOL(WINAPI* OGGetVolumeInformationA)(LPCSTR lpRootPathName,
     LPDWORD lpFileSystemFlags, LPSTR lpFileSystemNameBuffer,
     DWORD nFileSystemNameSize) = GetVolumeInformationA;
 
-
-
 BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
     LPSTR lpVolumeNameBuffer, DWORD nVolumeNameSize,
     LPDWORD lpVolumeSerialNumber, LPDWORD lpMaximumComponentLength,
     LPDWORD lpFileSystemFlags, LPSTR lpFileSystemNameBuffer,
     DWORD nFileSystemNameSize)
 {
-    for (dce::GetVolumeInformationAConfig conf : apiConfig.getVolumeInformationAConfigs)
+    for (dce::GetVolumeInformationAConfig& conf : apiConfig.getVolumeInformationAConfigs)
     {
-        if (lstrcmp(lpRootPathName, conf.lpRootPathName.c_str()) == 0)
+        if (lpRootPathName == conf.lpRootPathName)
         {
-            StringCchCopyA(
-                lpVolumeNameBuffer,
+            std::copy_n(
+                conf.lpVolumeNameBuffer.c_str(),
                 conf.nVolumeNameSize > 0 ? conf.nVolumeNameSize : nVolumeNameSize,
-                conf.lpVolumeNameBuffer.c_str()
+                lpVolumeNameBuffer
             );
             lpVolumeSerialNumber = &conf.lpVolumeSerialNumber;
             lpMaximumComponentLength = &conf.lpMaximumComponentLength;
             lpFileSystemFlags = &conf.lpFileSystemFlags;
-            if (lpFileSystemNameBuffer != NULL)
+            if (lpFileSystemNameBuffer != nullptr)
             {
-                StringCchCopyA(
-                    lpFileSystemNameBuffer,
+                std::copy_n(
+                    conf.lpFileSystemNameBuffer.c_str(),
                     conf.nFileSystemNameSize > 0 ? conf.nFileSystemNameSize : nFileSystemNameSize,
-                    conf.lpFileSystemNameBuffer.c_str()
+                    lpFileSystemNameBuffer
                 );
             }
             return conf.returnValue;

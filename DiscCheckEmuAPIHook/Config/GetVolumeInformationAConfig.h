@@ -34,25 +34,5 @@ namespace dce {
 		std::string   lpFileSystemNameBuffer;
 		DWORD nFileSystemNameSize;
 		bool returnValue;
-
-		GetVolumeInformationAConfig(
-			const std::string& lpRootPathName,
-			const std::string& lpVolumeNameBuffer,
-			DWORD nVolumeNameSize,
-			DWORD lpVolumeSerialNumber,
-			DWORD lpMaximumComponentLength,
-			DWORD lpFileSystemFlags,
-			const std::string& lpFileSystemNameBuffer,
-			DWORD nFileSystemNameSize,
-			bool returnValue) :
-			lpRootPathName(lpRootPathName),
-			lpVolumeNameBuffer(lpVolumeNameBuffer),
-			nVolumeNameSize(nVolumeNameSize),
-			lpVolumeSerialNumber(lpVolumeSerialNumber),
-			lpMaximumComponentLength(lpMaximumComponentLength),
-			lpFileSystemFlags(lpFileSystemFlags),
-			lpFileSystemNameBuffer(lpFileSystemNameBuffer),
-			nFileSystemNameSize(nFileSystemNameSize),
-			returnValue(returnValue) { }
 	};
 }

@@ -1,19 +1,18 @@
-add_executable (DCELoader WIN32
-"DCELoader.cpp"
-"ConfigParser.h"
-"ConfigParser.cpp"
-"Injector.h"
-"Injector.cpp"
-"Version.h"
-"Res/Resources.rc")
-
-target_sources(DCELoader PRIVATE "Res/DCELoader.manifest")
-
-target_link_libraries(DCELoader PUBLIC yaml-cpp)
-
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET DCELoader PROPERTY CXX_STANDARD 20)
-endif()
+project (DCELoader) 
 
 CPMAddPackage("gh:jbeder/yaml-cpp#0.8.0")
 
+add_executable (${PROJECT_NAME} WIN32
+"DCELoader.cpp"
+"ConfigParser.cpp"
+"Injector.cpp"
+"Res/Resources.rc"
+)
+
+target_sources(${PROJECT_NAME} PRIVATE "Res/DCELoader.manifest")
+
+target_link_libraries(${PROJECT_NAME} PRIVATE yaml-cpp)
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
+
+set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)

@@ -30,43 +30,43 @@
 
 void installHooks()
 {
-    if(apiConfig.getDriveAConfigs.size() > 0)
-        DetourAttach(&(PVOID&)OGGetDriveTypeA, HookedGetDriveTypeA);
-    if(apiConfig.getVolumeInformationAConfigs.size() > 0)
-        DetourAttach(&(PVOID&)OGGetVolumeInformationA, HookedGetVolumeInformationA);
-    if (apiConfig.fileRedirections.size() > 0)
+    if (!apiConfig.getDriveAConfigs.empty())
+        DetourAttach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
+    if (!apiConfig.getVolumeInformationAConfigs.empty())
+        DetourAttach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);
+    if (!apiConfig.fileRedirections.empty())
     {
-        DetourAttach(&(PVOID&)OGCreateFileA, HookedCreateFileA);
-        DetourAttach(&(PVOID&)OGGetFileAttributesA, HookedGetFileAttributesA);
+        DetourAttach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
+        DetourAttach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
     }
-    if (apiConfig.mciSendCommandConfigs.size() > 0)
-        DetourAttach(&(PVOID&)OGmciSendCommand, HookedmciSendCommand);
-    if (apiConfig.virtualDrives.size() > 0)
-        DetourAttach(&(PVOID&)OGGetLogicalDrives, HookedGetLogicalDrives);
+    if (!apiConfig.mciSendCommandConfigs.empty())
+        DetourAttach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
+    if (!apiConfig.virtualDrives.empty())
+        DetourAttach(reinterpret_cast<PVOID*>(&OGGetLogicalDrives), HookedGetLogicalDrives);
 }
 
 void uninstallHooks()
 {
-    if (apiConfig.getDriveAConfigs.size() > 0)
-        DetourDetach(&(PVOID&)OGGetDriveTypeA, HookedGetDriveTypeA);
-    if (apiConfig.getVolumeInformationAConfigs.size() > 0)
-        DetourDetach(&(PVOID&)OGGetVolumeInformationA, HookedGetVolumeInformationA);
-    if (apiConfig.fileRedirections.size() > 0)
+    if (!apiConfig.getDriveAConfigs.empty())
+        DetourDetach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
+    if (!apiConfig.getVolumeInformationAConfigs.empty())
+        DetourDetach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);
+    if (!apiConfig.fileRedirections.empty())
     {
-        DetourDetach(&(PVOID&)OGCreateFileA, HookedCreateFileA);
-        DetourDetach(&(PVOID&)OGGetFileAttributesA, HookedGetFileAttributesA);
+        DetourDetach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
+        DetourDetach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
     }
-    if (apiConfig.mciSendCommandConfigs.size() > 0)
-        DetourDetach(&(PVOID&)OGmciSendCommand, HookedmciSendCommand);
-    if (apiConfig.virtualDrives.size() > 0)
-        DetourDetach(&(PVOID&)OGGetLogicalDrives, HookedGetLogicalDrives);
+    if (!apiConfig.mciSendCommandConfigs.empty())
+        DetourDetach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
+    if (!apiConfig.virtualDrives.empty())
+        DetourDetach(reinterpret_cast<PVOID*>(&OGGetLogicalDrives), HookedGetLogicalDrives);
 }
 
 
 BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
 {
     if (DetourIsHelperProcess()) {
-        return TRUE;
+        return true;
     }
 
     if (dwReason == DLL_PROCESS_ATTACH) {
@@ -74,33 +74,34 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
             dce::ConfigParser conf = dce::ConfigParser("DCEConfig.yaml");
             apiConfig = conf.parseHooks();
         }
-        catch (std::exception e)
+        catch (std::exception& e)
         {
-            MessageBoxA(NULL, e.what(), "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            exit(-1);
+            MessageBoxA(nullptr, e.what(), "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
+            ExitProcess(-1);
         }
 
         DetourRestoreAfterWith();
-
         DetourTransactionBegin();
         DetourUpdateThread(GetCurrentThread());
         
         installHooks();
         
         if (DetourTransactionCommit() != NO_ERROR) {
-            MessageBoxA(NULL, "Error: DetourTransactionCommit failed", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            return -1;
+            MessageBoxA(nullptr, "Error: DetourTransactionCommit failed", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
+            ExitProcess(-1);
         }
         
     }
     else if (dwReason == DLL_PROCESS_DETACH) {
         DetourTransactionBegin();
         DetourUpdateThread(GetCurrentThread());
+
         uninstallHooks();
+
         if (DetourTransactionCommit() != NO_ERROR) {
-            MessageBoxA(NULL, "Error: DetourTransactionCommit failed", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            return -1;
+            MessageBoxA(nullptr, "Error: DetourTransactionCommit failed", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
+            ExitProcess(-1);
         }
     }
-    return TRUE;
+    return true;
 }

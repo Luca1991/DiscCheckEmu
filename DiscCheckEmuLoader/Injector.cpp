@@ -17,8 +17,11 @@
 	along with DiscCheckEmu.  If not, see <http://www.gnu.org/licenses/>
 */
 
+#pragma warning( disable : 6335 )
+
 #include "Injector.h"
 #include <psapi.h> 
+#include <array>
 
 namespace dce {
 
@@ -30,21 +33,19 @@ namespace dce {
 
 	PROCESS_INFORMATION Injector::createTargetProcess()
 	{
-		STARTUPINFO startupInfo;
-		ZeroMemory(&startupInfo, sizeof(startupInfo));
+		STARTUPINFO startupInfo{};
 		startupInfo.cb = sizeof(startupInfo);
-		PROCESS_INFORMATION processInformation;
-		ZeroMemory(&processInformation, sizeof(processInformation));
+		PROCESS_INFORMATION processInformation{};
 
 		if (!CreateProcessA(
 			targetName.c_str(),
-			NULL,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
+			nullptr,
 			false,
 			CREATE_SUSPENDED,
-			NULL,
-			NULL,
+			nullptr,
+			nullptr,
 			&startupInfo,
 			&processInformation))
 		{
@@ -58,12 +59,12 @@ namespace dce {
 	{
 		LPVOID startAddr = VirtualAllocEx(
 			processInformation.hProcess,
-			NULL,
+			nullptr,
 			dllName.size() + 1,
 			MEM_COMMIT | MEM_RESERVE,
 			PAGE_READWRITE
 		);
-		if (startAddr == NULL)
+		if (startAddr == nullptr)
 		{
 			TerminateProcess(processInformation.hProcess, 0);
 			throw std::exception("Error: Can't allocate space to the target proccess");
@@ -73,7 +74,7 @@ namespace dce {
 			startAddr,
 			dllName.c_str(),
 			dllName.size(),
-			NULL))
+			nullptr))
 		{
 			TerminateProcess(processInformation.hProcess, 0);
 			throw std::exception("Error: Can't write to the target proccess");
@@ -86,14 +87,14 @@ namespace dce {
 		PROCESS_INFORMATION processInformation)
 	{
 		HMODULE k32handle = GetModuleHandleA("Kernel32.dll");
-		if (k32handle == NULL)
+		if (k32handle == nullptr)
 		{
 			TerminateProcess(processInformation.hProcess, 0);
 			throw std::exception("Error: Can't get Kernel32 Module Handle");
 		}
 
 		FARPROC loadLibraryAAddr = GetProcAddress(k32handle, "LoadLibraryA");
-		if (loadLibraryAAddr == NULL)
+		if (loadLibraryAAddr == nullptr)
 		{
 			TerminateProcess(processInformation.hProcess, 0);
 			throw std::exception("Error: Can't get LoadLibraryA address");
@@ -101,12 +102,12 @@ namespace dce {
 
 		HANDLE hRemoteThread = CreateRemoteThread(
 			processInformation.hProcess,
-			NULL,
+			nullptr,
 			0,
-			(LPTHREAD_START_ROUTINE)loadLibraryAAddr,
+			reinterpret_cast<LPTHREAD_START_ROUTINE>(loadLibraryAAddr),
 			startAddr,
 			0,
-			NULL);
+			nullptr);
 		if(!hRemoteThread)
 		{
 			TerminateProcess(processInformation.hProcess, 0);
@@ -123,22 +124,22 @@ namespace dce {
 	void Injector::checkInjection(PROCESS_INFORMATION processInformation)
 	{
 		Sleep(3 * 1000);
-		HMODULE hModules[1024];
+		std::array<HMODULE, 1024> hModules;
 		DWORD cbNeeded;
-		if(EnumProcessModules(processInformation.hProcess, hModules,
+		if(EnumProcessModules(processInformation.hProcess, hModules.data(),
 			sizeof(hModules), &cbNeeded))
 		{
 			int moduleCount = cbNeeded / sizeof(HMODULE);
 
 			bool found = false;
-			for(int i = 0; i < moduleCount; ++i)
+			for(int i = 0; i < moduleCount && !found; ++i)
 			{
-				TCHAR szModName[MAX_PATH];
+				std::string szModName(MAX_PATH, 0);
 				if (GetModuleFileNameEx(processInformation.hProcess,
-					hModules[i], szModName, sizeof(szModName) / sizeof(TCHAR)))
+					hModules[i], szModName.data(), szModName.size()))
 				{
-					std::string currentModuleName(szModName);
-					if (currentModuleName.find(dllName) != std::string::npos)
+					szModName.shrink_to_fit();
+					if (szModName.find(dllName) != std::string::npos)
 					{
 						found = true;
 					}

@@ -26,8 +26,5 @@ namespace dce {
 	{
 		std::string lpRootPathName;
 		int returnValue;
-
-		GetDriveAConfig(const std::string& lpRootPathName, int returnValue)
-			: lpRootPathName(lpRootPathName), returnValue(returnValue) { }
 	};
 }

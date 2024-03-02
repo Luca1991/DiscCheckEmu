@@ -27,9 +27,9 @@ static UINT(WINAPI* OGGetDriveTypeA)(LPCSTR lpRootPathName) = GetDriveTypeA;
 UINT WINAPI HookedGetDriveTypeA(LPCSTR lpRootPathName)
 {
 
-	for (dce::GetDriveAConfig conf : apiConfig.getDriveAConfigs)
+	for (const dce::GetDriveAConfig& conf : apiConfig.getDriveAConfigs)
 	{
-		if (lstrcmp(lpRootPathName, conf.lpRootPathName.c_str()) == 0)
+		if (lpRootPathName == conf.lpRootPathName)
 			return conf.returnValue;
 	}
 

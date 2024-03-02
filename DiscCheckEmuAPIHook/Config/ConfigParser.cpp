@@ -33,9 +33,10 @@ namespace dce {
 
 		YAML::Node virtualDrives = config["virtual_drives"];
 
-		for (std::size_t i = 0; i < virtualDrives.size(); ++i) {
-			char virtualDrive = std::toupper(virtualDrives[i].as<char>());
-			if (virtualDrive >= 0x41 && virtualDrive <= 0x5A)
+		for(const auto& d : virtualDrives)
+		{
+			char virtualDrive = std::toupper(d.as<char>());
+			if (virtualDrive >= 'A' && virtualDrive <= 'Z')
 				apiConfig.virtualDrives.push_back(virtualDrive);
 			else
 				throw std::exception("Error: Unable to correctly parse virtual_drives node");
@@ -43,22 +44,23 @@ namespace dce {
 
 		YAML::Node hooks = config["hooks"];
 
-		for (const auto& hook : hooks) {
+		for (const auto& hook : hooks)
+		{
 			std::string api = hook["api"].as<std::string>();
 
 			if (api == "GetDriveTypeA")
 			{
 				apiConfig.getDriveAConfigs.push_back(
-					GetDriveAConfig(
+					{
 						hook["arg1"].as<std::string>(),
-						hook["return"].as<int>()
-				));
+						hook["return"].as<int>(),
+					}
+				);
 
 			}
 			else if (api == "GetVolumeInformationA")
 			{
-				apiConfig.getVolumeInformationAConfigs.push_back(
-					GetVolumeInformationAConfig(
+				apiConfig.getVolumeInformationAConfigs.push_back({
 						hook["arg1"].as<std::string>(),
 						hook["arg2"].as<std::string>(),
 						hook["arg3"].IsDefined() ? hook["arg3"].as<std::uint32_t>() : 0,
@@ -68,14 +70,14 @@ namespace dce {
 						hook["arg7"].IsDefined() ? hook["arg7"].as<std::string>() : "",
 						hook["arg8"].IsDefined() ? hook["arg8"].as<std::uint32_t>() : 0,
 						hook["return"].as<bool>()
-				));
+					});
 			}
 			else if (api == "mciSendCommand")
 			{
-				MciSendCommandConfig mciSendCommandConfig = MciSendCommandConfig(
+				MciSendCommandConfig mciSendCommandConfig{
 					hook["arg2"].as<std::uint32_t>(),
 					hook["return"].as<std::uint32_t>()
-				);
+				};
 
 				if (hook["status_return"].IsDefined())
 					mciSendCommandConfig.lpStatusDwReturn = hook["status_return"].as<std::uint32_t>();

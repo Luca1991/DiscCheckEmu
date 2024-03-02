@@ -34,9 +34,9 @@ int WINAPI WinMain(
 		dce::Injector injector = dce::Injector(conf.getTarget(), "DCEAPIHook.dll");
 		injector.execute();
 	}
-	catch (std::exception e)
+	catch (std::exception& e)
 	{
-		MessageBoxA(NULL, e.what(), "DiscCheckEmu Loader", MB_OK | MB_ICONERROR);
+		MessageBoxA(nullptr, e.what(), "DiscCheckEmu Loader", MB_OK | MB_ICONERROR);
 		return -1;
 	}
 

@@ -25,10 +25,7 @@ namespace dce {
 	struct MciSendCommandConfig
 	{
 		UINT uMsg;
-		DWORD lpStatusDwReturn; // Only used in MCI_STATUS
 		MCIERROR returnValue;
-
-		MciSendCommandConfig(UINT uMsg, MCIERROR returnValue)
-			: uMsg(uMsg), lpStatusDwReturn(0), returnValue(returnValue) { }
+		DWORD lpStatusDwReturn{0}; // Only used in MCI_STATUS
 	};
 }

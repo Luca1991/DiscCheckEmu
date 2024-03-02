@@ -30,7 +30,7 @@
 #define VER_FILE_DESCRIPTION		"API Hook component for DiscCheckEmu"
 #define VER_COPYRIGHT_STR			"Copyright (C) 2024 Luca D'Amico. All Rights Reserved."
 
-#ifdef _DEBUG
+#ifndef NDEBUG
 #define VER_FILEFLAGS				0x00000001L // VS_FF_DEBUG
 #else
 #define VER_FILEFLAGS				0

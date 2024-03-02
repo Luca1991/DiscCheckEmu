@@ -1,9 +1,7 @@
-﻿cmake_minimum_required (VERSION 3.8)
+﻿cmake_minimum_required (VERSION 3.25)
 
-project ("DiscCheckEmu")
+include(cmake/CPM.cmake)
 
-include("CPM.cmake")
-
-add_subdirectory ("DiscCheckEmuAPIHook")
-add_subdirectory ("DiscCheckEmuLoader")
+add_subdirectory (DiscCheckEmuAPIHook)
+add_subdirectory (DiscCheckEmuLoader)
 

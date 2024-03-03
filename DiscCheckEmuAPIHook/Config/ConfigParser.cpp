@@ -58,6 +58,13 @@ namespace dce {
 				);
 
 			}
+			else if (api == "GetFileAttributesA")
+			{
+				apiConfig.getFileAttributesAConfigs.push_back({
+						hook["arg1"].as<std::string>(),
+						hook["return"].as<uint32_t>()
+					});
+			}
 			else if (api == "GetVolumeInformationA")
 			{
 				apiConfig.getVolumeInformationAConfigs.push_back({

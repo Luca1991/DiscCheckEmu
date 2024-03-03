@@ -34,11 +34,10 @@ void installHooks()
         DetourAttach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
     if (!apiConfig.getVolumeInformationAConfigs.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);
-    if (!apiConfig.fileRedirections.empty())
-    {
+    if(!apiConfig.fileRedirections.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
+    if (!apiConfig.getFileAttributesAConfigs.empty() || !apiConfig.fileRedirections.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
-    }
     if (!apiConfig.mciSendCommandConfigs.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
     if (!apiConfig.virtualDrives.empty())
@@ -52,10 +51,9 @@ void uninstallHooks()
     if (!apiConfig.getVolumeInformationAConfigs.empty())
         DetourDetach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);
     if (!apiConfig.fileRedirections.empty())
-    {
         DetourDetach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
+    if (!apiConfig.getFileAttributesAConfigs.empty() || !apiConfig.fileRedirections.empty())
         DetourDetach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
-    }
     if (!apiConfig.mciSendCommandConfigs.empty())
         DetourDetach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
     if (!apiConfig.virtualDrives.empty())

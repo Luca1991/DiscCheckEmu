@@ -19,21 +19,11 @@
 
 #pragma once
 
-#include <vector>
-#include <unordered_map>
-#include "GetDriveAConfig.h"
-#include "GetFileAttributesAConfig.h"
-#include "GetVolumeInformationAConfig.h"
-#include "MciSendCommandConfig.h"
 
 namespace dce {
-	struct APIConfig
+	struct GetFileAttributesAConfig
 	{
-		std::unordered_map<std::string, std::string> fileRedirections;
-		std::vector<dce::GetDriveAConfig> getDriveAConfigs;
-		std::vector<dce::GetFileAttributesAConfig> getFileAttributesAConfigs;
-		std::vector<dce::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
-		std::vector<dce::MciSendCommandConfig> mciSendCommandConfigs;
-		std::vector<char> virtualDrives;
+		std::string lpFileName;
+		uint32_t returnValue;
 	};
 }

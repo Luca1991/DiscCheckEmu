@@ -167,6 +167,21 @@ Hook configuration:
 - arg1 (lpRootPathName): when this string matches the one passed by the calling code, the hook will be triggered.
 - return: when the hook is triggered, this value will be returned to the calling code.
 
+### GetFileAttributesA
+
+GetFileAttributesA signature:
+
+```
+DWORD GetFileAttributesA(
+  [in] LPCSTR lpFileName
+);
+```
+
+Hook configuration:
+
+- arg1 (lpFileName): when this string matches the one passed by the calling code, the hook will be triggered.
+- return: when the hook is triggered, this value will be returned to the calling code. For a list of valid File Attribute Constants see the official [Microsoft Documentation](https://learn.microsoft.com/en-us/windows/win32/fileio/file-attribute-constants).
+
 ### GetVolumeInformationA
 
 GetVolumeInformationA signature:
@@ -221,7 +236,7 @@ Hook configuration:
 
 ### Other Hook
 
-This is a list of hooks automatically created by DCE, but not directly configurable via configuration file:
+This is a list of hooks automatically created by DCE:
 
 * CreateFileA: this hook will be automatically created when using the file redirection feature.
 * GetFileAttributesA: this hook will be automatically created when using the file redirection feature.

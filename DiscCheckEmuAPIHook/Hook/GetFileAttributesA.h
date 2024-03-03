@@ -20,7 +20,6 @@
 #pragma once
 
 #include <Windows.h>
-#include <strsafe.h>
 #include "..\ApiHook.h"
 #include "..\Util\StringUtils.h"
 
@@ -29,6 +28,14 @@ static DWORD(WINAPI* OGGetFileAttributesA)(
 
 DWORD WINAPI HookedGetFileAttributesA(LPCSTR lpFileName)
 {
+	for (dce::GetFileAttributesAConfig& conf : apiConfig.getFileAttributesAConfigs)
+	{
+		if (string_utils::areEqualIgnoreCase(lpFileName, conf.lpFileName))
+		{
+			return conf.returnValue;
+		}
+	}
+
 	auto it = apiConfig.fileRedirections.find(string_utils::toLowercase(lpFileName));
 	if (it != apiConfig.fileRedirections.end())
 	{

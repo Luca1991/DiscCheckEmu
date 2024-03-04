@@ -11,6 +11,8 @@
 - Various code optimizations.
 - Improved project structure.
 
+### Fixed
+- Bug in GetVolumeInformationA hook
 
 ## [0.0.1] - 2024-02-19
 

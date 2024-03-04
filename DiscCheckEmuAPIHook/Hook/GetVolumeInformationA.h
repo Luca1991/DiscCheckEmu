@@ -44,9 +44,16 @@ BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
                 conf.nVolumeNameSize > 0 ? conf.nVolumeNameSize : nVolumeNameSize,
                 lpVolumeNameBuffer
             );
-            lpVolumeSerialNumber = &conf.lpVolumeSerialNumber;
-            lpMaximumComponentLength = &conf.lpMaximumComponentLength;
-            lpFileSystemFlags = &conf.lpFileSystemFlags;
+
+            if(lpVolumeSerialNumber != nullptr)
+                *lpVolumeSerialNumber = conf.lpVolumeSerialNumber;
+
+            if(lpMaximumComponentLength != nullptr)
+                *lpMaximumComponentLength = conf.lpMaximumComponentLength;
+
+            if(lpFileSystemFlags != nullptr)
+                *lpFileSystemFlags = conf.lpFileSystemFlags;
+
             if (lpFileSystemNameBuffer != nullptr)
             {
                 std::copy_n(

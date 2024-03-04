@@ -19,23 +19,17 @@
 
 #pragma once
 
-#include <vector>
-#include <unordered_map>
-#include "GetDiskFreeSpaceAConfig.h"
-#include "GetDriveAConfig.h"
-#include "GetFileAttributesAConfig.h"
-#include "GetVolumeInformationAConfig.h"
-#include "MciSendCommandConfig.h"
+#include <Windows.h>
+#include <iostream>
 
 namespace dce {
-	struct APIConfig
+	struct GetDiskFreeSpaceAConfig
 	{
-		std::unordered_map<std::string, std::string> fileRedirections;
-		std::vector<dce::GetDiskFreeSpaceAConfig> getDiskFreeSpaceAConfigs;
-		std::vector<dce::GetDriveAConfig> getDriveAConfigs;
-		std::vector<dce::GetFileAttributesAConfig> getFileAttributesAConfigs;
-		std::vector<dce::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
-		std::vector<dce::MciSendCommandConfig> mciSendCommandConfigs;
-		std::vector<char> virtualDrives;
+		std::string lpRootPathName;
+		DWORD lpSectorsPerCluster;
+		DWORD lpBytesPerSector;
+		DWORD lpNumberOfFreeClusters;
+		DWORD lpTotalNumberOfClusters;
+		bool returnValue;
 	};
 }

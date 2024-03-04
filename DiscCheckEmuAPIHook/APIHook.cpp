@@ -21,6 +21,7 @@
 #include <Windows.h>
 #include <detours/detours.h>
 #include "Config/ConfigParser.h"
+#include "Hook/GetDiskFreeSpaceA.h"
 #include "Hook/GetDriveTypeA.h"
 #include "Hook/GetVolumeInformationA.h"
 #include "Hook/CreateFileA.h"
@@ -30,6 +31,8 @@
 
 void installHooks()
 {
+    if (!apiConfig.getDiskFreeSpaceAConfigs.empty())
+        DetourAttach(reinterpret_cast<PVOID*>(&OGGetDiskFreeSpaceA), HookedGetDiskFreeSpaceA);
     if (!apiConfig.getDriveAConfigs.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
     if (!apiConfig.getVolumeInformationAConfigs.empty())
@@ -46,6 +49,8 @@ void installHooks()
 
 void uninstallHooks()
 {
+    if (!apiConfig.getDiskFreeSpaceAConfigs.empty())
+        DetourDetach(reinterpret_cast<PVOID*>(&OGGetDiskFreeSpaceA), HookedGetDiskFreeSpaceA);
     if (!apiConfig.getDriveAConfigs.empty())
         DetourDetach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
     if (!apiConfig.getVolumeInformationAConfigs.empty())

@@ -152,6 +152,29 @@ file_redirections: this is a list of the desired file redirections. Each entry i
 This is a list of the currently supported APIs. Each API have its own customizable arguments and return value. Please note that the argument used as trigger is different for each API.
 You should refer to the official Microsoft documentation for a full description of each API argument.
 
+### GetDiskFreeSpaceA
+
+GetDiskFreeSpaceA signature:
+
+```
+BOOL GetDiskFreeSpaceA(
+  [in]  LPCSTR  lpRootPathName,
+  [out] LPDWORD lpSectorsPerCluster,
+  [out] LPDWORD lpBytesPerSector,
+  [out] LPDWORD lpNumberOfFreeClusters,
+  [out] LPDWORD lpTotalNumberOfClusters
+);
+```
+
+Hook configuration:
+
+- arg1 (lpRootPathName): when this string matches the one passed by the calling code, the hook will be triggered.
+- arg2 (lpSectorsPerCluster): the number of sectors per cluster.
+- arg3 (lpBytesPerSector): the number of bytes per sector.
+- arg4 (lpNumberOfFreeClusters): the total number of free clusters on the disk.
+- arg5 (lpTotalNumberOfClusters):  the total number of clusters on the disk.
+- return: when the hook is triggered, this value will be returned to the calling code.
+
 ### GetDriveTypeA
 
 GetDriveTypeA signature:

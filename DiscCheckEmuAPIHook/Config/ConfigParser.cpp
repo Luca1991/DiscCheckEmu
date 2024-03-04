@@ -48,7 +48,18 @@ namespace dce {
 		{
 			std::string api = hook["api"].as<std::string>();
 
-			if (api == "GetDriveTypeA")
+			if (api == "GetDiskFreeSpaceA")
+			{
+				apiConfig.getDiskFreeSpaceAConfigs.push_back({
+						hook["arg1"].as<std::string>(),
+						hook["arg2"].as<std::uint32_t>(),
+						hook["arg3"].as<std::uint32_t>(),
+						hook["arg4"].as<std::uint32_t>(),
+						hook["arg5"].as<std::uint32_t>(),
+						hook["return"].as<bool>()
+					});
+			}
+			else if (api == "GetDriveTypeA")
 			{
 				apiConfig.getDriveAConfigs.push_back(
 					{

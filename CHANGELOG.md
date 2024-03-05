@@ -5,6 +5,7 @@
 
 ### Added
 - GetFileAttributesA hook
+- GetDiskFreeSpaceA Hook
 
 ### Changed
 - Refactored code for better readability.

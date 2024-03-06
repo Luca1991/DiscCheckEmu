@@ -35,6 +35,12 @@ BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
     LPDWORD lpFileSystemFlags, LPSTR lpFileSystemNameBuffer,
     DWORD nFileSystemNameSize)
 {
+#ifndef NDEBUG
+    std::cout << "---> GetVolumeInformationA(" << lpRootPathName << ", " <<
+        lpVolumeNameBuffer << ", " << nVolumeNameSize << ", " << lpVolumeSerialNumber <<
+        lpMaximumComponentLength << ", " << lpFileSystemFlags << ", " << lpFileSystemNameBuffer <<
+        nFileSystemNameSize << ")" << std::endl;
+#endif
     for (dce::GetVolumeInformationAConfig& conf : apiConfig.getVolumeInformationAConfigs)
     {
         if (lpRootPathName == conf.lpRootPathName)
@@ -62,6 +68,12 @@ BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
                     lpFileSystemNameBuffer
                 );
             }
+#ifndef NDEBUG
+            std::cout << "<--- GetVolumeInformationA(" << lpRootPathName << ", " <<
+                lpVolumeNameBuffer << ", " << nVolumeNameSize << ", " << lpVolumeSerialNumber <<
+                lpMaximumComponentLength << ", " << lpFileSystemFlags << ", " << lpFileSystemNameBuffer <<
+                nFileSystemNameSize << ") | Returning: " << conf.returnValue << std::endl;
+#endif
             return conf.returnValue;
         }
     }

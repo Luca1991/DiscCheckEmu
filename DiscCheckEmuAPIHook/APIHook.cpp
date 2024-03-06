@@ -73,6 +73,12 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
     }
 
     if (dwReason == DLL_PROCESS_ATTACH) {
+#ifndef NDEBUG
+        AllocConsole();
+        if (freopen("CONOUT$", "w", stdout) == nullptr) {
+            MessageBoxA(nullptr, "Warning: Unable to create logging console", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
+        }
+#endif
         try {
             dce::ConfigParser conf = dce::ConfigParser("DCEConfig.yaml");
             apiConfig = conf.parseHooks();
@@ -96,6 +102,9 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
         
     }
     else if (dwReason == DLL_PROCESS_DETACH) {
+#ifndef NDEBUG
+        FreeConsole();
+#endif
         DetourTransactionBegin();
         DetourUpdateThread(GetCurrentThread());
 

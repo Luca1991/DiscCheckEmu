@@ -41,6 +41,16 @@ Some well known debuggers:
 
 Using a debugger is surely the most complex way to gain the required information needed to write a DCE configuration, but sometimes is the only way. And, for what it's worth, is my favourite way :)
 
+### DCE itself (Debug Version)
+
+The debug version of DCE features a debug prompt with logs of each intercepted API.
+This is especially useful when debugging your DCEConfig file.
+Please use the debug version *ONLY* for debugging purposes.
+Once you are statisfied with your DCEConfig file, you should run the performance-optimized release version.
+When running the debug version, keep in mind that:
+- "--->" means: data from the executable.
+- "<---" means: data passed to the executable.
+
 ## Configuration Examples
 
 ### Example 1: an easy example 

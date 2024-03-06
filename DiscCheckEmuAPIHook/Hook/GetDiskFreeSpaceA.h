@@ -35,6 +35,13 @@ BOOL WINAPI HookedGetDiskFreeSpaceA(
 	LPDWORD lpNumberOfFreeClusters,
 	LPDWORD lpTotalNumberOfClusters)
 {
+#ifndef NDEBUG
+	std::cout << "---> GetDiskFreeSpaceA(" << lpRootPathName << ", " <<
+		lpSectorsPerCluster << ", " << lpBytesPerSector << ", " <<
+		lpNumberOfFreeClusters << ", " << lpTotalNumberOfClusters <<
+		")" << std::endl;
+#endif
+
 	for (dce::GetDiskFreeSpaceAConfig& conf : apiConfig.getDiskFreeSpaceAConfigs)
 	{
 		if (lpRootPathName == conf.lpRootPathName)
@@ -50,6 +57,13 @@ BOOL WINAPI HookedGetDiskFreeSpaceA(
 			return conf.returnValue;
 		}
 	}
+
+#ifndef NDEBUG
+	std::cout << "<--- GetDiskFreeSpaceA(" << lpRootPathName << ", " <<
+		lpSectorsPerCluster << ", " << lpBytesPerSector << ", " <<
+		lpNumberOfFreeClusters << ", " << lpTotalNumberOfClusters <<
+		")" << std::endl;
+#endif
 
 	return OGGetDiskFreeSpaceA(lpRootPathName,
 		lpSectorsPerCluster, lpBytesPerSector,

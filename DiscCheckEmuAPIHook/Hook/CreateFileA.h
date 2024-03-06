@@ -41,9 +41,23 @@ HANDLE WINAPI HookedCreateFileA(
 	DWORD                 dwFlagsAndAttributes,
 	HANDLE                hTemplateFile)
 {
+#ifndef NDEBUG
+	std::cout << "---> CreateFileA(" << lpFileName << ", " << dwDesiredAccess <<
+		", " << dwShareMode << ", " << lpSecurityAttributes << ", " <<
+		dwCreationDisposition << ", " << dwFlagsAndAttributes << ", " << 
+		hTemplateFile << ")" << std::endl;
+#endif
+
 	auto it = apiConfig.fileRedirections.find(string_utils::toLowercase(lpFileName));
 	if (it != apiConfig.fileRedirections.end())
 		lpFileName = LPCSTR(it->second.c_str());
+
+#ifndef NDEBUG
+	std::cout << "<--- CreateFileA(" << lpFileName << ", " << dwDesiredAccess <<
+		", " << dwShareMode << ", " << lpSecurityAttributes << ", " <<
+		dwCreationDisposition << ", " << dwFlagsAndAttributes << ", " <<
+		hTemplateFile << ")" << std::endl;
+#endif
 
 	return OGCreateFileA(lpFileName, dwDesiredAccess, dwShareMode,
 		lpSecurityAttributes, dwCreationDisposition,

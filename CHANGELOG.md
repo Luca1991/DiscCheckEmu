@@ -6,6 +6,7 @@
 ### Added
 - GetFileAttributesA hook
 - GetDiskFreeSpaceA Hook
+- The debug version now features a debug prompt with logs of each intercepted API
 
 ### Changed
 - Refactored code for better readability.

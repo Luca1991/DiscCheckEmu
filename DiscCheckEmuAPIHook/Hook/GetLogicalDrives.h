@@ -32,5 +32,9 @@ DWORD WINAPI HookedGetLogicalDrives()
 		drivesMap |= (1 << (drive - 'A'));
 	}
 
+#ifndef NDEBUG
+	std::cout << "<--- GetLogicalDrives | Returning: " << drivesMap << std::endl;
+#endif
+
 	return drivesMap;
 }

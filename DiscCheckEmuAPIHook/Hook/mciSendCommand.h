@@ -36,7 +36,10 @@ MCIERROR WINAPI HookedmciSendCommand(
 	DWORD_PTR   fdwCommand,
 	DWORD_PTR   dwParam)
 {
-
+#ifndef NDEBUG
+	std::cout << "---> mciSendCommand(" << IDDevice << ", " <<
+		uMsg << ", " << fdwCommand << ", " << dwParam << ")" << std::endl;
+#endif
 	for (const dce::MciSendCommandConfig& conf : apiConfig.mciSendCommandConfigs)
 	{
 		if (uMsg == conf.uMsg)
@@ -44,8 +47,15 @@ MCIERROR WINAPI HookedmciSendCommand(
 			if (uMsg == MCI_STATUS){
 				MCI_STATUS_PARMS* par = reinterpret_cast<MCI_STATUS_PARMS*>(dwParam);
 				par->dwReturn = conf.lpStatusDwReturn;
+#ifndef NDEBUG
+				std::cout << "<--- mciSendCommand (MCI_STATUS) | dwReturn: " <<
+					conf.lpStatusDwReturn << std::endl;
+#endif
 			}
-
+#ifndef NDEBUG
+			std::cout << "<--- mciSendCommand | Returning: " <<
+				conf.returnValue << std::endl;
+#endif
 			return conf.returnValue;
 		}
 	}

@@ -29,6 +29,7 @@ jobs:
         cp "build/DiscCheckEmuLoader/Release/DCELoader.exe" DCE-x86/
         cp "DCEConfig_TEMPLATE.yaml" DCE-x86/DCEConfig.yaml
         cp "README.md" DCE-x86/README.txt
+        cp "CHANGELOG.md" DCE-x86/CHANGELOG.txt
         Compress-Archive -Path "DCE-x86/*" -DestinationPath DiscCheckEmu-${{ github.ref_name }}-x86.zip
 
     - name: Release

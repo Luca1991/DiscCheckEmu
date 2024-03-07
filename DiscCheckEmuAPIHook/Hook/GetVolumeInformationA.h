@@ -36,9 +36,10 @@ BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
     DWORD nFileSystemNameSize)
 {
 #ifndef NDEBUG
-    std::cout << "---> GetVolumeInformationA(" << lpRootPathName << ", " <<
-        lpVolumeNameBuffer << ", " << nVolumeNameSize << ", " << lpVolumeSerialNumber <<
-        lpMaximumComponentLength << ", " << lpFileSystemFlags << ", " << lpFileSystemNameBuffer <<
+    std::cout << "---> GetVolumeInformationA(" << (lpRootPathName != nullptr? lpRootPathName : "NULL") << ", " <<
+        (lpVolumeNameBuffer != nullptr ? lpVolumeNameBuffer : "NULL") << ", " << nVolumeNameSize << ", " <<
+        lpVolumeSerialNumber << lpMaximumComponentLength << ", " << lpFileSystemFlags << ", " <<
+        (lpFileSystemNameBuffer != nullptr ? lpFileSystemNameBuffer : "NULL") << ", " <<
         nFileSystemNameSize << ")" << std::endl;
 #endif
     for (dce::GetVolumeInformationAConfig& conf : apiConfig.getVolumeInformationAConfigs)
@@ -69,9 +70,10 @@ BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
                 );
             }
 #ifndef NDEBUG
-            std::cout << "<--- GetVolumeInformationA(" << lpRootPathName << ", " <<
-                lpVolumeNameBuffer << ", " << nVolumeNameSize << ", " << lpVolumeSerialNumber <<
-                lpMaximumComponentLength << ", " << lpFileSystemFlags << ", " << lpFileSystemNameBuffer <<
+            std::cout << "<---GetVolumeInformationA(" << (lpRootPathName != nullptr ? lpRootPathName : "NULL") << ", " <<
+                (lpVolumeNameBuffer != nullptr ? lpVolumeNameBuffer : "NULL") << ", " << nVolumeNameSize << ", " <<
+                lpVolumeSerialNumber << lpMaximumComponentLength << ", " << lpFileSystemFlags << ", " <<
+                (lpFileSystemNameBuffer != nullptr ? lpFileSystemNameBuffer : "NULL") << ", " <<
                 nFileSystemNameSize << ") | Returning: " << conf.returnValue << std::endl;
 #endif
             return conf.returnValue;

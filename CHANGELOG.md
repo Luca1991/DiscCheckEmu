@@ -1,6 +1,12 @@
 # DiscCheckEmu Changelog
 
- 
+
+## [0.1.1] - 2024-03-07
+
+### Fixed
+- Crash in Debug build (API Logging)
+
+
 ## [0.1.0] - 2024-03-07
 
 ### Added
@@ -15,6 +21,7 @@
 
 ### Fixed
 - Bug in GetVolumeInformationA hook
+
 
 ## [0.0.1] - 2024-02-19
 

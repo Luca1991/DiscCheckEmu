@@ -27,7 +27,7 @@ static UINT(WINAPI* OGGetDriveTypeA)(LPCSTR lpRootPathName) = GetDriveTypeA;
 UINT WINAPI HookedGetDriveTypeA(LPCSTR lpRootPathName)
 {
 #ifndef NDEBUG
-	std::cout << "---> GetDriveTypeA(" << lpRootPathName <<	")" << std::endl;
+	std::cout << "---> GetDriveTypeA(" << (lpRootPathName != nullptr? lpRootPathName: "NULL") << ")" << std::endl;
 #endif
 
 	for (const dce::GetDriveAConfig& conf : apiConfig.getDriveAConfigs)
@@ -37,7 +37,7 @@ UINT WINAPI HookedGetDriveTypeA(LPCSTR lpRootPathName)
 	}
 
 #ifndef NDEBUG
-	std::cout << "<--- GetDriveTypeA(" << lpRootPathName << ")" << std::endl;
+	std::cout << "<--- GetDriveTypeA(" << (lpRootPathName != nullptr ? lpRootPathName : "NULL") << ")" << std::endl;
 #endif
 
 	return OGGetDriveTypeA(lpRootPathName);

@@ -29,7 +29,7 @@ static DWORD(WINAPI* OGGetFileAttributesA)(
 DWORD WINAPI HookedGetFileAttributesA(LPCSTR lpFileName)
 {
 #ifndef NDEBUG
-	std::cout << "---> GetFileAttributesA(" << lpFileName << ")" << std::endl;
+	std::cout << "---> GetFileAttributesA(" << (lpFileName != nullptr ? lpFileName : "NULL") << ")" << std::endl;
 #endif
 
 	for (dce::GetFileAttributesAConfig& conf : apiConfig.getFileAttributesAConfigs)
@@ -37,7 +37,7 @@ DWORD WINAPI HookedGetFileAttributesA(LPCSTR lpFileName)
 		if (string_utils::areEqualIgnoreCase(lpFileName, conf.lpFileName))
 		{
 #ifndef NDEBUG
-			std::cout << "<--- GetFileAttributesA | Returning: " << conf.returnValue << std::endl;
+			std::cout << "<--- GetFileAttributesA(" << (lpFileName != nullptr ? lpFileName : "NULL") << ")" << std::endl;
 #endif
 			return conf.returnValue;
 		}

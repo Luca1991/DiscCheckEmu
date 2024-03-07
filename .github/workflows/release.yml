@@ -20,9 +20,21 @@ jobs:
       run: cmake -A Win32 -B build -S .
 
     - name: Build
-      run: cmake --build build --config Release
+      run: |
+        cmake --build build --config Debug
+        cmake --build build --config Release
 
-    - name: Archive Binaries
+    - name: Archive Debug Binaries
+      run: |
+        mkdir DCE-DEBUG-x86
+        cp "build/DiscCheckEmuAPIHook/Debug/DCEAPIHook.dll" DCE-DEBUG-x86/
+        cp "build/DiscCheckEmuLoader/Debug/DCELoader.exe" DCE-DEBUG-x86/
+        cp "DCEConfig_TEMPLATE.yaml" DCE-DEBUG-x86/DCEConfig.yaml
+        cp "README.md" DCE-DEBUG-x86/README.txt
+        cp "CHANGELOG.md" DCE-DEBUG-x86/CHANGELOG.txt
+        Compress-Archive -Path "DCE-DEBUG-x86/*" -DestinationPath DiscCheckEmu-${{ github.ref_name }}-DEBUG-x86.zip
+
+    - name: Archive Release Binaries
       run: |
         mkdir DCE-x86
         cp "build/DiscCheckEmuAPIHook/Release/DCEAPIHook.dll" DCE-x86/
@@ -36,4 +48,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: DiscCheckEmu-${{ github.ref_name }}-x86.zip
+        files: |
+          DiscCheckEmu-${{ github.ref_name }}-DEBUG-x86.zip
+          DiscCheckEmu-${{ github.ref_name }}-x86.zip

@@ -1,4 +1,4 @@
-DCEConfig.yaml serve as a blueprint instruction both DCELoader and DCEAPIHook on how to operate.
+DCEConfig.yaml serves as a blueprint instruction for both DCELoader and DCEAPIHook on how to operate.
 This document contains:
 * a list of some suggested software to gain information about your target process.
 * some configuration examples.
@@ -23,9 +23,9 @@ Here are some easy-to-use tools:
 
 * [Process Monitor](https://learn.microsoft.com/it-it/sysinternals/downloads/procmon): Freeware.
 * [API Monitor](http://www.rohitab.com/apimonitor): Freeware.
-* APIS32 (AKA API SPY): Commercial. No longer being developed nor sold.
+* APIS32 (AKA API SPY): Commercial. No longer being developed or sold.
 
-Please refer to the documentation of each of these software tools.
+Please refer to the documentation for each of these software tools.
 
 ### Debuggers
 
@@ -33,20 +33,21 @@ This is the most powerful way to gain knowledge from a process.
 Using this software requires knowledge of both low-level programming and OS internals, but such not-so-easy-to-obtain skills are paid in full by the control you will get from EVERY binary running on your machine.
 Some well known debuggers:
 
-* [x64dbg/x32dbg](https://x64dbg.com/): Open source. 
-* [Ollydbg](https://www.ollydbg.de/): Freeware. No longer developed.
-* [IDA Free](https://hex-rays.com/ida-free/): Freeware. It is a disassembler but comes with debugging facilities too.
-* [Binary Ninja](https://binary.ninja/): Commercial. Like IDA, this is a disassembler but features debugging capabilies too.
+* [x64dbg/x32dbg](https://x64dbg.com/): Open source.
+* [Ollydbg x32/x64](https://www.ollydbg.de/): Freeware. No longer developed.
+* [IDA Free](https://hex-rays.com/ida-free/): Freeware. It is a disassembler but comes with debugging facilities too. Also proposes cloud-based x86/x64 decompiler.
+* [Binary Ninja](https://binary.ninja/): Commercial. Like IDA, this is a disassembler but features debugging capabilities too.
+* [Binary Ninja Free](https://binary.ninja/free/): Free edition of Binary Ninja.
 * [BugChecker](https://github.com/vitoplantamura/BugChecker): Open source. RING 0 DEBUGGER working on Windows 11! If you was a SoftICE fan (like me) this is the way to go!
 
-Using a debugger is surely the most complex way to gain the required information needed to write a DCE configuration, but sometimes is the only way. And, for what it's worth, is my favourite way :)
+Using a debugger is surely the most complex way to gain the required information needed to write a DCE configuration, but sometimes is the only way. And, for what it's worth, is my favorite way :)
 
 ### DCE itself (Debug Version)
 
 The debug version of DCE features a debug prompt with logs of each intercepted API.
 This is especially useful when debugging your DCEConfig file.
 Please use the debug version *ONLY* for debugging purposes.
-Once you are statisfied with your DCEConfig file, you should run the performance-optimized release version.
+Once you are satisfied with your DCEConfig file, you should run the performance-optimized release version.
 When running the debug version, keep in mind that:
 - "--->" means: data from the executable.
 - "<---" means: data passed to the executable.
@@ -83,7 +84,7 @@ Writing configurations for this type of software is super easy, as you only need
 
 ### Example 2: File redirection
 
-Scenario: Let's suppose to have installed a game that during launch check the presence of a CD-ROM labeled "INCREDIBLE_GAME". The main executable of such game is named "IG.exe". The game will laod two important files from the CD-ROM: "X:\\Stuff\\DATA0.DAT" and "X:\\Stuff\\DATA1.DAT" (where X is the drive letter).
+Scenario: Let's suppose to have installed a game that during launch check the presence of a CD-ROM labeled "INCREDIBLE_GAME". The main executable of such game is named "IG.exe". The game will load two important files from the CD-ROM: "X:\\Stuff\\DATA0.DAT" and "X:\\Stuff\\DATA1.DAT" (where X is the drive letter).
 
 We can use the file-redirection feature of DCE to easily write a DCEConfig.yaml file for this game:
 
@@ -114,8 +115,8 @@ file_redirections:
     destination: ".\\Stuff\\DATA1.DAT"
 ``` 
 
-We already covered in the previous example the "loader", "virtual_drive" and "hooks" stuff. Let's focus on the new entry: "file_redirections". This list is used to let DCE knows what file acess to redirect and where.
-We know that the game will try to access these two files located to the CD-ROM, but since we don't want to keep the original disc inserted, we copied to the game installation directory (we also added a comment to our configuration file to keep it in mind for the future). When we add a source and destination parameters for each of these files , DCE will automatically create an hook against the CreateFileA API, altering on the fly the path of the file being accessed (source) with the destionation string. When the game will try to access these two files on the disc, it will actually access the ones copied to the game directory on the HDD.
+We already covered in the previous example the "loader", "virtual_drive" and "hooks" stuff. Let's focus on the new entry: "file_redirections". This list is used to let DCE know what file access to redirect and where.
+We know that the game will try to access these two files located to the CD-ROM, but since we don't want to keep the original disc inserted, we copied to the game installation directory (we also added a comment to our configuration file to keep it in mind for the future). When we add a source and destination parameters for each of these files , DCE will automatically create an hook against the CreateFileA API, altering on the fly the path of the file being accessed (source) with the destination string. When the game will try to access these two files on the disc, it will actually access the ones copied to the game directory on the HDD.
 
 ### Example 3: hooking more APIs
 

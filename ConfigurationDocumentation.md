@@ -35,9 +35,9 @@ Some well known debuggers:
 
 * [x64dbg/x32dbg](https://x64dbg.com/): Open source.
 * [Ollydbg x32/x64](https://www.ollydbg.de/): Freeware. No longer developed.
-* [IDA Free](https://hex-rays.com/ida-free/): Freeware. It is a disassembler but comes with debugging facilities too. Also proposes cloud-based x86/x64 decompiler
+* [IDA Free](https://hex-rays.com/ida-free/): Freeware. It is a disassembler but comes with debugging facilities too. Also proposes cloud-based x86/x64 decompiler.
 * [Binary Ninja](https://binary.ninja/): Commercial. Like IDA, this is a disassembler but features debugging capabilities too.
-* [Binary Ninja Free](https://binary.ninja/free/): Free edition of Binary Ninja
+* [Binary Ninja Free](https://binary.ninja/free/): Free edition of Binary Ninja.
 * [BugChecker](https://github.com/vitoplantamura/BugChecker): Open source. RING 0 DEBUGGER working on Windows 11! If you was a SoftICE fan (like me) this is the way to go!
 
 Using a debugger is surely the most complex way to gain the required information needed to write a DCE configuration, but sometimes is the only way. And, for what it's worth, is my favorite way :)

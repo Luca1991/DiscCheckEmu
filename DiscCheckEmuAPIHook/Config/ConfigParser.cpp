@@ -35,7 +35,7 @@ namespace dce {
 
 		for(const auto& d : virtualDrives)
 		{
-			char virtualDrive = std::toupper(d.as<char>());
+			char virtualDrive = (char)std::toupper(d.as<char>());
 			if (virtualDrive >= 'A' && virtualDrive <= 'Z')
 				apiConfig.virtualDrives.push_back(virtualDrive);
 			else

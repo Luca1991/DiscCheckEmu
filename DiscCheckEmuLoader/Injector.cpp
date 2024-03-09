@@ -136,7 +136,7 @@ namespace dce {
 			{
 				std::string szModName(MAX_PATH, 0);
 				if (GetModuleFileNameEx(processInformation.hProcess,
-					hModules[i], szModName.data(), szModName.size()))
+					hModules[i], szModName.data(), static_cast<DWORD>(szModName.size())))
 				{
 					szModName.shrink_to_fit();
 					if (szModName.find(dllName) != std::string::npos)

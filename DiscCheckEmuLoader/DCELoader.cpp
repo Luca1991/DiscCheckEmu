@@ -23,10 +23,10 @@
 
 
 int WINAPI WinMain(
-	_In_     HINSTANCE hInstance,
-	_In_opt_ HINSTANCE hPrevInstance,
-	_In_     PSTR      lpCmdLine,
-	_In_     int       nCmdShow)
+	[[maybe_unused]] _In_     HINSTANCE hInstance,
+	[[maybe_unused]] _In_opt_ HINSTANCE hPrevInstance,
+	[[maybe_unused]] _In_     PSTR      lpCmdLine,
+	[[maybe_unused]] _In_     int       nCmdShow)
 {
 	try
 	{
@@ -34,7 +34,7 @@ int WINAPI WinMain(
 		dce::Injector injector = dce::Injector(conf.getTarget(), "DCEAPIHook.dll");
 		injector.execute();
 	}
-	catch (std::exception& e)
+	catch (const std::exception& e)
 	{
 		MessageBoxA(nullptr, e.what(), "DiscCheckEmu Loader", MB_OK | MB_ICONERROR);
 		return -1;

@@ -66,7 +66,7 @@ void uninstallHooks()
 }
 
 
-BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
+BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_unused]] LPVOID reserved)
 {
     if (DetourIsHelperProcess()) {
         return true;
@@ -83,10 +83,10 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
             dce::ConfigParser conf = dce::ConfigParser("DCEConfig.yaml");
             apiConfig = conf.parseHooks();
         }
-        catch (std::exception& e)
+        catch (const std::exception& e)
         {
             MessageBoxA(nullptr, e.what(), "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            ExitProcess(-1);
+            ExitProcess(1);
         }
 
         DetourRestoreAfterWith();
@@ -97,7 +97,7 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
         
         if (DetourTransactionCommit() != NO_ERROR) {
             MessageBoxA(nullptr, "Error: DetourTransactionCommit failed", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            ExitProcess(-1);
+            ExitProcess(1);
         }
         
     }
@@ -112,7 +112,7 @@ BOOL WINAPI DllMain(HINSTANCE hinst, DWORD dwReason, LPVOID reserved)
 
         if (DetourTransactionCommit() != NO_ERROR) {
             MessageBoxA(nullptr, "Error: DetourTransactionCommit failed", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            ExitProcess(-1);
+            ExitProcess(1);
         }
     }
     return true;

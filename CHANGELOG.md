@@ -1,6 +1,15 @@
 # DiscCheckEmu Changelog
 
 
+## [0.2.0] - Unreleased
+
+### Changed
+- Added more info on debuggers into ConfigurationDocumentation.md (thanks to @greenozon).
+
+### Fixed
+- Fixed some warnings (thanks to @greenozon).
+
+
 ## [0.1.1] - 2024-03-07
 
 ### Fixed

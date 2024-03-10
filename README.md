@@ -14,6 +14,9 @@ protections that use segment encryption and IAT obfuscation. This is a list of c
 
 * [engine32](https://github.com/TheRogueArchivist/DRML/blob/main/entries/engine32/engine32.md)
 
+## DCEConfigs Repository
+
+If you are just looking for users pre-made DCEConfig file, go to: https://github.com/Luca1991/DCEConfigs
 
 ## Features
 

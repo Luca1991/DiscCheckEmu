@@ -16,3 +16,5 @@ target_link_libraries(${PROJECT_NAME} PRIVATE detours yaml-cpp winmm.lib)
 target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
+
+target_compile_options(${PROJECT_NAME} PRIVATE /W4 /WX)

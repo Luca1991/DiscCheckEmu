@@ -3,6 +3,9 @@
 
 ## [0.2.0] - Unreleased
 
+### Added
+- FindFirstFileA hook (currently only used in file redirection)
+
 ### Changed
 - Added more info on debuggers into ConfigurationDocumentation.md (thanks to @greenozon).
 

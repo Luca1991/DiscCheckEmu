@@ -273,5 +273,6 @@ Hook configuration:
 This is a list of hooks automatically created by DCE:
 
 * CreateFileA: this hook will be automatically created when using the file redirection feature.
+* FindFirstFileA: this hook will be automatically created when using the file redirection feature.
 * GetFileAttributesA: this hook will be automatically created when using the file redirection feature.
 * GetLogicalDrives: this hook will be created when at least one virtual drive is specified in virtual_drives array.

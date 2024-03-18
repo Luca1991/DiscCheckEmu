@@ -5,6 +5,8 @@
 
 ### Added
 - FindFirstFileA hook (currently only used in file redirection)
+- RegQueryValueExA hook
+- DCE is now compatible with BitPool DRM!
 
 ### Changed
 - Added more info on debuggers into ConfigurationDocumentation.md (thanks to @greenozon).

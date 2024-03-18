@@ -17,18 +17,20 @@
     along with DiscCheckEmu.  If not, see <http://www.gnu.org/licenses/>
 */
 
-#include "APIHook.h"
 #include <Windows.h>
 #include <detours/detours.h>
+#include "APIHook.h"
 #include "Config/ConfigParser.h"
 #include "Hook/FindFirstFileA.h"
+#include "Hook/CreateFileA.h"
 #include "Hook/GetDiskFreeSpaceA.h"
 #include "Hook/GetDriveTypeA.h"
-#include "Hook/GetVolumeInformationA.h"
-#include "Hook/CreateFileA.h"
 #include "Hook/GetFileAttributesA.h"
-#include "Hook/mciSendCommand.h"
 #include "Hook/GetLogicalDrives.h"
+#include "Hook/GetVolumeInformationA.h"
+#include "Hook/mciSendCommand.h"
+#include "Hook/RegQueryValueExA.h"
+
 
 void installHooks()
 {
@@ -46,6 +48,8 @@ void installHooks()
         DetourAttach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
     if (!apiConfig.mciSendCommandConfigs.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
+    if(!apiConfig.regQueryValueExAConfigs.empty())
+        DetourAttach(reinterpret_cast<PVOID*>(&OGRegQueryValueExA), HookedRegQueryValueExA);
     if (!apiConfig.virtualDrives.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGGetLogicalDrives), HookedGetLogicalDrives);
 }
@@ -66,6 +70,8 @@ void uninstallHooks()
         DetourDetach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
     if (!apiConfig.mciSendCommandConfigs.empty())
         DetourDetach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
+    if (!apiConfig.regQueryValueExAConfigs.empty())
+        DetourDetach(reinterpret_cast<PVOID*>(&OGRegQueryValueExA), HookedRegQueryValueExA);
     if (!apiConfig.virtualDrives.empty())
         DetourDetach(reinterpret_cast<PVOID*>(&OGGetLogicalDrives), HookedGetLogicalDrives);
 }

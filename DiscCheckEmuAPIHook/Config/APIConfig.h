@@ -26,6 +26,7 @@
 #include "GetFileAttributesAConfig.h"
 #include "GetVolumeInformationAConfig.h"
 #include "MciSendCommandConfig.h"
+#include "RegQueryValueExAConfig.h"
 
 namespace dce {
 	struct APIConfig
@@ -36,6 +37,7 @@ namespace dce {
 		std::vector<dce::GetFileAttributesAConfig> getFileAttributesAConfigs;
 		std::vector<dce::GetVolumeInformationAConfig> getVolumeInformationAConfigs;
 		std::vector<dce::MciSendCommandConfig> mciSendCommandConfigs;
+		std::vector<dce::RegQueryValueExAConfig> regQueryValueExAConfigs;
 		std::vector<char> virtualDrives;
 	};
 }

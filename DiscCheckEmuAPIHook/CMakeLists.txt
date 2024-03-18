@@ -9,6 +9,7 @@ add_library (${PROJECT_NAME} SHARED
 "Config/ConfigParser.cpp"
 "Res/Resources.rc"
 "Util/StringUtils.cpp"
+"Util/RegUtils.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE detours yaml-cpp winmm.lib)

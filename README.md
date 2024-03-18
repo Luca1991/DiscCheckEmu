@@ -13,6 +13,8 @@ like SafeDisc, SecuROM or LaserLock are not (and will not be) supported by this 
 protections that use segment encryption and IAT obfuscation. This is a list of copy protections that are known to be successfully handled by DCE:
 
 * [engine32](https://github.com/TheRogueArchivist/DRML/blob/main/entries/engine32/engine32.md)
+* [Bitpool](https://github.com/TheRogueArchivist/DRML/blob/main/entries/Bitpool/Bitpool.md)
+
 
 ## DCEConfigs Repository
 

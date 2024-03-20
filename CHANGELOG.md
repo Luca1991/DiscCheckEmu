@@ -1,7 +1,7 @@
 # DiscCheckEmu Changelog
 
 
-## [0.2.0] - Unreleased
+## [0.2.0] - 2024-03-20
 
 ### Added
 - FindFirstFileA hook (currently only used in file redirection)

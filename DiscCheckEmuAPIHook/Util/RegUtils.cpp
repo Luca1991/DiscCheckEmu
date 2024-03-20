@@ -47,7 +47,10 @@ std::string reg_utils::getPathFromHKEY(HKEY hKey)
             FreeLibrary(dll);
         }
     }
-    std::string keyPath(keyPathW.begin(), keyPathW.end());
+
+    int keyPathSize = WideCharToMultiByte(CP_UTF8, 0, keyPathW.data(), keyPathW.size(), nullptr, 0, nullptr, nullptr);
+    std::string keyPath(keyPathSize, 0);
+    WideCharToMultiByte(CP_UTF8, 0, keyPathW.data(), keyPathW.size(), keyPath.data(), keyPathSize, nullptr, nullptr);
     return keyPath;
 }
 

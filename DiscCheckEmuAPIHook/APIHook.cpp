@@ -86,7 +86,8 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_un
     if (dwReason == DLL_PROCESS_ATTACH) {
 #ifndef NDEBUG
         AllocConsole();
-        if (freopen("CONOUT$", "w", stdout) == nullptr) {
+        FILE* unusedFH;
+        if (freopen_s(&unusedFH, "CONOUT$", "w", stdout) != 0) {
             MessageBoxA(nullptr, "Warning: Unable to create logging console", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
         }
 #endif

@@ -19,6 +19,8 @@
 
 #include "StringUtils.h"
 #include <algorithm>
+#include <string>
+#include <Windows.h>
 
 bool string_utils::areEqualIgnoreCase(const std::string& str1, const std::string& str2)
 {
@@ -38,5 +40,18 @@ std::string string_utils::toLowercase(const std::string& str)
 		{
 			return std::tolower(c);
 		});
+	return result;
+}
+
+std::string string_utils::widestringToString(const std::wstring& wideString)
+{
+	if (wideString.empty()) return {};
+
+	auto size_needed = WideCharToMultiByte(CP_UTF8, 0, wideString.data(), static_cast<int>(wideString.size()), nullptr, 0, nullptr, nullptr);
+	if (size_needed <= 0)
+		throw std::runtime_error("WideCharToMultiByte() failed: " + std::to_string(size_needed));
+
+	std::string result(size_needed, 0);
+	WideCharToMultiByte(CP_UTF8, 0, wideString.data(), static_cast<int>(wideString.size()), result.data(), size_needed, nullptr, nullptr);
 	return result;
 }

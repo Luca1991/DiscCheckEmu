@@ -18,39 +18,61 @@
 */
 
 #include "RegUtils.h"
+#include "StringUtils.h"
+#include <Windows.h>
+#include <vector>
 
+struct KEY_NAME_INFORMATION {
+    ULONG NameLength;
+    WCHAR Name[1];
+};
 
 std::string reg_utils::getPathFromHKEY(HKEY hKey)
 {
-    std::wstring keyPathW;
-    if (hKey != nullptr)
+    static constexpr int KEY_NAME_INFORMATION_ID = 3;
+    static constexpr auto STATUS_BUFFER_TOO_SMALL = 0xC0000023L;
+    
+    if (hKey == nullptr)
     {
-        HMODULE dll = LoadLibraryA("ntdll.dll");
-        if (dll != nullptr) {
-            typedef DWORD(__stdcall* NtQueryKeyType)(
-                HANDLE  KeyHandle,
-                int KeyInformationClass,
-                PVOID  KeyInformation,
-                ULONG  Length,
-                PULONG  ResultLength);
-
-            NtQueryKeyType func = reinterpret_cast<NtQueryKeyType>(GetProcAddress(dll, "NtQueryKey"));
-
-            if (func != nullptr) {
-                wchar_t buffer[MAX_PATH] = { '/0' };
-                DWORD size = MAX_PATH;
-                DWORD result = 0;
-                result = func(hKey, 3, buffer, size, &size);
-                keyPathW = std::wstring(buffer + 2);
-            }
-
-            FreeLibrary(dll);
-        }
+        return {};
     }
 
-    int keyPathSize = WideCharToMultiByte(CP_UTF8, 0, keyPathW.data(), keyPathW.size(), nullptr, 0, nullptr, nullptr);
-    std::string keyPath(keyPathSize, 0);
-    WideCharToMultiByte(CP_UTF8, 0, keyPathW.data(), keyPathW.size(), keyPath.data(), keyPathSize, nullptr, nullptr);
-    return keyPath;
+    HMODULE dll = GetModuleHandleA("ntdll.dll");
+    if (dll == nullptr) 
+    {
+        return {};
+    }
+
+    typedef DWORD(__stdcall* NtQueryKeyType)(
+        HANDLE  KeyHandle,
+        int KeyInformationClass,
+        PVOID  KeyInformation,
+        ULONG  Length,
+        PULONG  ResultLength);
+
+    NtQueryKeyType ntQueryKey = reinterpret_cast<NtQueryKeyType>(GetProcAddress(dll, "NtQueryKey"));
+    if (ntQueryKey == nullptr) {
+        return {};
+    }
+
+    DWORD size = 0;
+    DWORD result = 0;
+    result = ntQueryKey(hKey, KEY_NAME_INFORMATION_ID, nullptr, 0, &size);
+    if (result != STATUS_BUFFER_TOO_SMALL)
+    {
+        return {};
+    }
+
+    size += sizeof(wchar_t);
+    std::vector<wchar_t> buffer(size / sizeof(wchar_t));
+    result = ntQueryKey(hKey, KEY_NAME_INFORMATION_ID, buffer.data(), size, &size);
+    if (result != ERROR_SUCCESS)
+    {
+        return {};
+    }
+
+    auto *KNInfo = reinterpret_cast<KEY_NAME_INFORMATION*>(buffer.data());
+    std::wstring keyPathW(reinterpret_cast<const wchar_t*>(&KNInfo->Name), KNInfo->NameLength / sizeof(wchar_t));
+    return string_utils::widestringToString(keyPathW);
 }
 

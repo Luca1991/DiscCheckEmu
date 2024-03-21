@@ -6,6 +6,9 @@
 ### Added
 - "/WX" flag in debug builds
 
+### Fixed
+- RegQueryValueExA hook: fixed various bugs + code optimizations
+
 
 ## [0.2.0] - 2024-03-20
 

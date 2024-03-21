@@ -27,4 +27,6 @@ namespace string_utils {
 
 	std::string toLowercase(const std::string& str);
 
+	std::string widestringToString(const std::wstring& wideString);
+
 }

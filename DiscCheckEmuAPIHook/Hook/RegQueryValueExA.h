@@ -52,7 +52,7 @@ LSTATUS WINAPI HookedRegQueryValueExA(
 	for (const dce::RegQueryValueExAConfig& conf : apiConfig.regQueryValueExAConfigs)
 	{
 		if (string_utils::areEqualIgnoreCase(lpValueName, conf.keyName)) {
-			if (conf.registryPath == "" || !string_utils::areEqualIgnoreCase(reg_utils::getPathFromHKEY(hKey), conf.registryPath))
+			if (conf.registryPath != "" && !string_utils::areEqualIgnoreCase(reg_utils::getPathFromHKEY(hKey), conf.registryPath))
 				continue;
 
 			if (lpType != nullptr)
@@ -71,14 +71,20 @@ LSTATUS WINAPI HookedRegQueryValueExA(
 				}
 				else if (conf.keyType == REG_DWORD)
 				{
-					std::memcpy(lpData, &std::get<uint32_t>(conf.value), *lpcbData);
+					auto value = std::get<uint32_t>(conf.value);
+					std::copy_n(
+						reinterpret_cast<LPBYTE>(&value),
+						*lpcbData,
+						lpData);
 				}
 				else if (conf.keyType == REG_QWORD)
 				{
-					std::memcpy(lpData, &std::get<uint64_t>(conf.value), *lpcbData);
+					auto value = std::get<uint64_t>(conf.value);
+					std::copy_n(
+						reinterpret_cast<LPBYTE>(&value),
+						*lpcbData,
+						lpData);
 				}
-	
-				
 			}
 #ifndef NDEBUG
 			std::cout << "<--- RegQueryValueExA(" << hKey << ", " <<

@@ -1,6 +1,12 @@
 # DiscCheckEmu Changelog
 
 
+## [0.2.1] - Unreleased
+
+### Added
+- "/WX" flag in debug builds
+
+
 ## [0.2.0] - 2024-03-20
 
 ### Added

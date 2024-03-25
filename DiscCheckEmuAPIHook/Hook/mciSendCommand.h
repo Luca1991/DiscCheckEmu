@@ -36,10 +36,8 @@ MCIERROR WINAPI HookedmciSendCommand(
 	DWORD_PTR   fdwCommand,
 	DWORD_PTR   dwParam)
 {
-#ifndef NDEBUG
-	std::cout << "---> mciSendCommand(" << IDDevice << ", " <<
-		uMsg << ", " << fdwCommand << ", " << dwParam << ")" << std::endl;
-#endif
+	SPDLOG_INFO("---> mciSendCommand(0x{0:x}, 0x{1:x}, 0x{2:x}, 0x{3:x})", IDDevice, uMsg, fdwCommand, dwParam);
+
 	for (const dce::MciSendCommandConfig& conf : apiConfig.mciSendCommandConfigs)
 	{
 		if (uMsg == conf.uMsg)
@@ -47,15 +45,9 @@ MCIERROR WINAPI HookedmciSendCommand(
 			if (uMsg == MCI_STATUS){
 				MCI_STATUS_PARMS* par = reinterpret_cast<MCI_STATUS_PARMS*>(dwParam);
 				par->dwReturn = conf.lpStatusDwReturn;
-#ifndef NDEBUG
-				std::cout << "<--- mciSendCommand (MCI_STATUS) | dwReturn: " <<
-					conf.lpStatusDwReturn << std::endl;
-#endif
+				SPDLOG_INFO("<--- mciSendCommand (MCI_STATUS) | dwReturn: 0x{0:x}", conf.lpStatusDwReturn);
 			}
-#ifndef NDEBUG
-			std::cout << "<--- mciSendCommand | Returning: " <<
-				conf.returnValue << std::endl;
-#endif
+			SPDLOG_INFO("<--- mciSendCommand | Returning: 0x{0:x}", conf.returnValue);
 			return conf.returnValue;
 		}
 	}

@@ -41,23 +41,17 @@ HANDLE WINAPI HookedCreateFileA(
 	DWORD                 dwFlagsAndAttributes,
 	HANDLE                hTemplateFile)
 {
-#ifndef NDEBUG
-	std::cout << "---> CreateFileA(" << (lpFileName != nullptr? lpFileName : "NULL") << ", " << 
-		dwDesiredAccess << ", " << dwShareMode << ", " << 
-		lpSecurityAttributes << ", " <<	dwCreationDisposition << ", " << dwFlagsAndAttributes << 
-		", " << (hTemplateFile != nullptr ? hTemplateFile : "NULL") << ")" << std::endl;
-#endif
+	SPDLOG_INFO("---> CreateFileA({0:s}, 0x{1:x}, 0x{2:x}, {3}, 0x{4:x}, 0x{5:x}, {6})",
+		lpFileName, dwDesiredAccess, dwShareMode, "lpSecurityAttributes",
+		dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 
 	auto it = apiConfig.fileRedirections.find(string_utils::toLowercase(lpFileName));
 	if (it != apiConfig.fileRedirections.end())
 		lpFileName = LPCSTR(it->second.c_str());
 
-#ifndef NDEBUG
-	std::cout << "<--- CreateFileA(" << (lpFileName != nullptr ? lpFileName : "NULL") << ", " << 
-		dwDesiredAccess <<	", " << dwShareMode << ", " << 
-		lpSecurityAttributes << ", " <<	dwCreationDisposition << ", " << dwFlagsAndAttributes <<
-		", " <<	(hTemplateFile != nullptr ? hTemplateFile : "NULL") << ")" << std::endl;
-#endif
+	SPDLOG_INFO("<--- CreateFileA({0:s}, 0x{1:x}, 0x{2:x}, {3}, 0x{4:x}, 0x{5:x}, {6})",
+		lpFileName, dwDesiredAccess, dwShareMode, "lpSecurityAttributes",
+		dwCreationDisposition, dwFlagsAndAttributes, hTemplateFile);
 
 	return OGCreateFileA(lpFileName, dwDesiredAccess, dwShareMode,
 		lpSecurityAttributes, dwCreationDisposition,

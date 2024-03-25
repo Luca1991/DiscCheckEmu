@@ -25,6 +25,7 @@ If you are just looking for users pre-made DCEConfig file, go to: https://github
 * Intercept API calls and modify their behavior without patching the executable.
 * File redirection.
 * Virtual Drive definition.
+* API Logger (only available in Debug builds).
 * Utilize a generic API hooking engine configurable through YAML files.
 * Easy to use injector for automatically creating the target process and injecting the DLL.
 * Fully open-source and customizable to suit individual needs.
@@ -58,4 +59,5 @@ Edit DCEConfig.yaml writing a configuration for your target, then run DCELoader.
 
 * Microsoft: For developing the Detours library used in this project.
 * jbeder: For developing the yaml-cpp library used in this project.
+* gabime: For developing the spdlog library used in this project.
 

@@ -40,19 +40,13 @@ LSTATUS WINAPI HookedRegQueryValueExA(
 	LPBYTE  lpData,
 	LPDWORD lpcbData)
 {
-#ifndef NDEBUG
-	std::cout << "---> RegQueryValueExA(" << hKey << ", " <<
-		(lpValueName != nullptr ? lpValueName : "NULL") << ", " <<
-		lpReserved << ", " <<
-		lpType << ", " <<
-		lpData << ", " <<
-		*lpcbData << ")" << std::endl;
-#endif
+	SPDLOG_INFO("---> RegQueryValueExA({0}, {1:s}, {2:s}, {3:s}, {4:s}, {5:s})", "hKey", lpValueName, "lpReserved", "lpType", "lpData", "lpcbData");
 
 	for (const dce::RegQueryValueExAConfig& conf : apiConfig.regQueryValueExAConfigs)
 	{
 		if (string_utils::areEqualIgnoreCase(lpValueName, conf.keyName)) {
-			if (conf.registryPath != "" && !string_utils::areEqualIgnoreCase(reg_utils::getPathFromHKEY(hKey), conf.registryPath))
+			std::string keyPath = reg_utils::getPathFromHKEY(hKey);
+			if (conf.registryPath != "" && !string_utils::areEqualIgnoreCase(keyPath, conf.registryPath))
 				continue;
 
 			if (lpType != nullptr)
@@ -68,6 +62,8 @@ LSTATUS WINAPI HookedRegQueryValueExA(
 						std::get<std::string>(conf.value).c_str(),
 						*lpcbData,
 						lpData);
+					SPDLOG_INFO("<--- RegQueryValueExA({0:s}, {1:s}, {2:s}, 0x{3:x}, {4:s}, 0x{5:x})",
+						keyPath, lpValueName, "lpReserved", *lpType, std::get<std::string>(conf.value).c_str(), *lpcbData);
 				}
 				else if (conf.keyType == REG_DWORD)
 				{
@@ -76,6 +72,8 @@ LSTATUS WINAPI HookedRegQueryValueExA(
 						reinterpret_cast<LPBYTE>(&value),
 						*lpcbData,
 						lpData);
+					SPDLOG_INFO("<--- RegQueryValueExA({0:s}, {1:s}, {2:s}, 0x{3:x}, 0x{4:x}, 0x{5:x})",
+						keyPath, lpValueName, "lpReserved", *lpType, std::get<uint32_t>(conf.value), *lpcbData);
 				}
 				else if (conf.keyType == REG_QWORD)
 				{
@@ -84,30 +82,18 @@ LSTATUS WINAPI HookedRegQueryValueExA(
 						reinterpret_cast<LPBYTE>(&value),
 						*lpcbData,
 						lpData);
+					SPDLOG_INFO("<--- RegQueryValueExA({0:s}, {1:s}, {2:s}, 0x{3:x}, 0x{4:x}, 0x{5:x})",
+						keyPath, lpValueName, "lpReserved", *lpType, std::get<uint64_t>(conf.value), *lpcbData);
 				}
 			}
-#ifndef NDEBUG
-			std::cout << "<--- RegQueryValueExA(" << hKey << ", " <<
-				(lpValueName != nullptr ? lpValueName : "NULL") << ", " <<
-				lpReserved << ", " <<
-				lpType << ", " <<
-				lpData << ", " <<
-				*lpcbData << ")" << std::endl;
-#endif
 
 			return conf.returnValue;
 		}
 		
 	}
 
-#ifndef NDEBUG
-	std::cout << "<--- RegQueryValueExA(" << hKey << ", " <<
-		(lpValueName != nullptr ? lpValueName : "NULL") << ", " <<
-		lpReserved << ", " <<
-		lpType << ", " <<
-		lpData << ", " <<
-		lpcbData << ")" << std::endl;
-#endif
+	SPDLOG_INFO("<--- RegQueryValueExA({0}, {1:s}, {2:s}, {3:s}, {4:s}, {5:s})",
+		"hKey", lpValueName, "lpReserved", "lpType", "lpData", "lpcbData");
 
 	return OGRegQueryValueExA(hKey, lpValueName, lpReserved, lpType, lpData, lpcbData);
 }

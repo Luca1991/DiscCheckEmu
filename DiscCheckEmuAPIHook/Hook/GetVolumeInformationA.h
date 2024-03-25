@@ -35,13 +35,10 @@ BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
     LPDWORD lpFileSystemFlags, LPSTR lpFileSystemNameBuffer,
     DWORD nFileSystemNameSize)
 {
-#ifndef NDEBUG
-    std::cout << "---> GetVolumeInformationA(" << (lpRootPathName != nullptr? lpRootPathName : "NULL") << ", " <<
-        (lpVolumeNameBuffer != nullptr ? lpVolumeNameBuffer : "NULL") << ", " << nVolumeNameSize << ", " <<
-        lpVolumeSerialNumber << lpMaximumComponentLength << ", " << lpFileSystemFlags << ", " <<
-        (lpFileSystemNameBuffer != nullptr ? lpFileSystemNameBuffer : "NULL") << ", " <<
-        nFileSystemNameSize << ")" << std::endl;
-#endif
+    SPDLOG_INFO("---> GetVolumeInformationA({0:s}, {1:s}, 0x{2:x}, {3:s}, {4:s}, {5:s}, {6:s}, 0x{7:x})",
+		lpRootPathName,	"lpVolumeNameBuffer", nVolumeNameSize, "lpVolumeSerialNumber",
+        "lpMaximumComponentLength", "lpFileSystemFlags", "lpFileSystemNameBuffer", nFileSystemNameSize);
+
     for (dce::GetVolumeInformationAConfig& conf : apiConfig.getVolumeInformationAConfigs)
     {
         if (lpRootPathName == conf.lpRootPathName)
@@ -69,16 +66,18 @@ BOOL WINAPI HookedGetVolumeInformationA(LPCSTR lpRootPathName,
                     lpFileSystemNameBuffer
                 );
             }
-#ifndef NDEBUG
-            std::cout << "<---GetVolumeInformationA(" << (lpRootPathName != nullptr ? lpRootPathName : "NULL") << ", " <<
-                (lpVolumeNameBuffer != nullptr ? lpVolumeNameBuffer : "NULL") << ", " << nVolumeNameSize << ", " <<
-                lpVolumeSerialNumber << lpMaximumComponentLength << ", " << lpFileSystemFlags << ", " <<
-                (lpFileSystemNameBuffer != nullptr ? lpFileSystemNameBuffer : "NULL") << ", " <<
-                nFileSystemNameSize << ") | Returning: " << conf.returnValue << std::endl;
-#endif
+
+            SPDLOG_INFO("<--- GetVolumeInformationA({0:s}, {1:s}, 0x{2:x}, 0x{3:x}, 0x{4:x}, 0x{5:x}, {6:s}, 0x{7:x}) | Returning: {8}",
+                lpRootPathName, lpVolumeNameBuffer, nVolumeNameSize, (lpVolumeSerialNumber == nullptr ? 0 : *lpVolumeSerialNumber),
+                (lpMaximumComponentLength == nullptr ? 0 : *lpMaximumComponentLength), (lpFileSystemFlags == nullptr ? 0 : *lpFileSystemFlags),
+                (lpFileSystemNameBuffer == nullptr? "NULL": lpFileSystemNameBuffer), nFileSystemNameSize, conf.returnValue);
             return conf.returnValue;
         }
     }
+
+    SPDLOG_INFO("<--- GetVolumeInformationA({0:s}, {1:s}, 0x{2:x}, {3:s}, {4:s}, {5:s}, {6:s}, 0x{7:x})",
+        lpRootPathName, "lpVolumeNameBuffer", nVolumeNameSize, "lpVolumeSerialNumber",
+        "lpMaximumComponentLength", "lpFileSystemFlags", "lpFileSystemNameBuffer", nFileSystemNameSize);
 
     return OGGetVolumeInformationA(lpRootPathName,
         lpVolumeNameBuffer, nVolumeNameSize,

@@ -1,6 +1,12 @@
 # DiscCheckEmu Changelog
 
 
+## [next] - Unreleased
+
+### Changed
+- API Logger (only in Debug build) is now powered by spdlog.
+
+
 ## [0.2.1] - 2024-03-22
 
 ### Added

@@ -31,19 +31,14 @@ HANDLE WINAPI HookedFindFirstFileA(
 	LPCSTR             lpFileName,
 	LPWIN32_FIND_DATAA lpFindFileData)
 {
-#ifndef NDEBUG
-	std::cout << "---> FindFirstFileA(" << (lpFileName != nullptr ? lpFileName : "NULL") << ", " <<
-		lpFindFileData << ")" << std::endl;
-#endif
+
+	SPDLOG_INFO("---> FindFirstFileA({0:s}, {1})", lpFileName, "lpFindFileData");
 
 	auto it = apiConfig.fileRedirections.find(string_utils::toLowercase(lpFileName));
 	if (it != apiConfig.fileRedirections.end())
 		lpFileName = LPCSTR(it->second.c_str());
 
-#ifndef NDEBUG
-	std::cout << "<--- FindFirstFileA(" << (lpFileName != nullptr ? lpFileName : "NULL") << ", " <<
-		lpFindFileData << ")" << std::endl;
-#endif
+	SPDLOG_INFO("<--- FindFirstFileA({0:s}, {1})", lpFileName, "lpFindFileData");
 
 	return OGFindFirstFileA(lpFileName, lpFindFileData);
 }

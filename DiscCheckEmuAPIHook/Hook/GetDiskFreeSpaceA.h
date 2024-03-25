@@ -35,11 +35,9 @@ BOOL WINAPI HookedGetDiskFreeSpaceA(
 	LPDWORD lpNumberOfFreeClusters,
 	LPDWORD lpTotalNumberOfClusters)
 {
-#ifndef NDEBUG
-	std::cout << "---> GetDiskFreeSpaceA(" << (lpRootPathName != nullptr ? lpRootPathName : "NULL") << ", " <<
-		lpSectorsPerCluster << ", " << lpBytesPerSector << ", " << lpNumberOfFreeClusters << ", " <<
-		lpTotalNumberOfClusters << ")" << std::endl;
-#endif
+	SPDLOG_INFO("---> GetDiskFreeSpaceA({0:s}, {1}, {2}, {3}, {4})",
+		lpRootPathName, "lpSectorsPerCluster", "lpBytesPerSector",
+		"lpNumberOfFreeClusters", "lpTotalNumberOfClusters");
 
 	for (dce::GetDiskFreeSpaceAConfig& conf : apiConfig.getDiskFreeSpaceAConfigs)
 	{
@@ -53,15 +51,18 @@ BOOL WINAPI HookedGetDiskFreeSpaceA(
 				*lpNumberOfFreeClusters = conf.lpNumberOfFreeClusters;
 			if(lpTotalNumberOfClusters != nullptr)
 				*lpTotalNumberOfClusters = conf.lpTotalNumberOfClusters;
+
+			SPDLOG_INFO("<--- GetDiskFreeSpaceA({0:s}, 0x{1:x}, 0x{2:x}, 0x{3:x}, 0x{4:x})",
+				lpRootPathName, *lpSectorsPerCluster, *lpBytesPerSector,
+				*lpNumberOfFreeClusters, *lpTotalNumberOfClusters);
+
 			return conf.returnValue;
 		}
 	}
 
-#ifndef NDEBUG
-	std::cout << "<--- GetDiskFreeSpaceA(" << (lpRootPathName != nullptr ? lpRootPathName : "NULL") << ", " <<
-		lpSectorsPerCluster << ", " <<	lpBytesPerSector << ", " <<	lpNumberOfFreeClusters  << ", " <<
-		lpTotalNumberOfClusters << ")" << std::endl;
-#endif
+	SPDLOG_INFO("<--- GetDiskFreeSpaceA({0:s}, {1}, {2}, {3}, {4})",
+		lpRootPathName, "lpSectorsPerCluster", "lpBytesPerSector",
+		"lpNumberOfFreeClusters", "lpTotalNumberOfClusters");
 
 	return OGGetDiskFreeSpaceA(lpRootPathName,
 		lpSectorsPerCluster, lpBytesPerSector,

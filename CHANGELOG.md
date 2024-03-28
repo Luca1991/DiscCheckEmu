@@ -3,6 +3,9 @@
 
 ## [next] - Unreleased
 
+### Added
+- RegEnumValueA hook
+
 ### Changed
 - API Logger (only in Debug build) is now powered by spdlog.
 

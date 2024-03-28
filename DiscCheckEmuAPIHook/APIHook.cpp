@@ -29,6 +29,7 @@
 #include "Hook/GetLogicalDrives.h"
 #include "Hook/GetVolumeInformationA.h"
 #include "Hook/mciSendCommand.h"
+#include "Hook/RegEnumValueA.h"
 #include "Hook/RegQueryValueExA.h"
 
 
@@ -48,6 +49,8 @@ void installHooks()
         DetourAttach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
     if (!apiConfig.mciSendCommandConfigs.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
+    if (!apiConfig.regEnumValueAConfigs.empty())
+        DetourAttach(reinterpret_cast<PVOID*>(&OGRegEnumValueA), HookedRegEnumValueA);
     if(!apiConfig.regQueryValueExAConfigs.empty())
         DetourAttach(reinterpret_cast<PVOID*>(&OGRegQueryValueExA), HookedRegQueryValueExA);
     if (!apiConfig.virtualDrives.empty())
@@ -70,6 +73,8 @@ void uninstallHooks()
         DetourDetach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
     if (!apiConfig.mciSendCommandConfigs.empty())
         DetourDetach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
+    if (!apiConfig.regEnumValueAConfigs.empty())
+        DetourDetach(reinterpret_cast<PVOID*>(&OGRegEnumValueA), HookedRegEnumValueA);
     if (!apiConfig.regQueryValueExAConfigs.empty())
         DetourDetach(reinterpret_cast<PVOID*>(&OGRegQueryValueExA), HookedRegQueryValueExA);
     if (!apiConfig.virtualDrives.empty())

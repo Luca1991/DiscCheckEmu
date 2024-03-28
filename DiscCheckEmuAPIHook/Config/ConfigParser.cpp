@@ -102,6 +102,28 @@ namespace dce {
 
 				apiConfig.mciSendCommandConfigs.push_back(mciSendCommandConfig);
 			}
+			else if (api == "RegEnumValueA")
+			{
+				uint32_t keyType = hook["key_type"].as<std::uint32_t>();
+				std::variant<std::string, std::uint32_t, std::uint64_t> value;
+				if (keyType == REG_SZ)
+					value = hook["value"].as<std::string>();
+				else if (keyType == REG_DWORD)
+					value = hook["value"].as<std::uint32_t>();
+				else if (keyType == REG_QWORD)
+					value = hook["value"].as<std::uint64_t>();
+				else
+					throw std::exception("Error: Unknown or unsupported RegEnumValueA key type");
+
+				apiConfig.regEnumValueAConfigs.push_back({
+					hook["reg_path"].IsDefined() ? hook["reg_path"].as<std::string>() : "",
+					hook["key_name"].IsDefined() ? hook["key_name"].as<std::string>() : nullptr,
+					keyType,
+					value,
+					hook["value_size"].as<std::uint32_t>(),
+					hook["return"].as<long>()
+					});
+			}
 			else if (api == "RegQueryValueExA")
 			{	
 				uint32_t keyType = hook["key_type"].as<std::uint32_t>();

@@ -268,6 +268,50 @@ Hook configuration:
 - return: this is the value (uint32_t) returned to the calling code.
 - status_return: *ONLY USED IF uMsg is 0x814 (MCI_STATUS).* This value (uint32_t) will be assigned to the dwReturn field of the MCI_STATUS_PARMS structure passed (as dwParam) to the mciSendCommand API. 
 
+### RegEnumValueA
+
+RegEnumValueA signature:
+
+```
+LSTATUS RegEnumValueA(
+  [in]                HKEY    hKey,
+  [in]                DWORD   dwIndex,
+  [out]               LPSTR   lpValueName,
+  [in, out]           LPDWORD lpcchValueName,
+                      LPDWORD lpReserved,
+  [out, optional]     LPDWORD lpType,
+  [out, optional]     LPBYTE  lpData,
+  [in, out, optional] LPDWORD lpcbData
+);
+```
+
+Due to its nature, the configuration of this hook is a bit different:
+
+- reg_path: this is the (OPTINONAL) path of the target key in the registry.
+- key_name: this is the name of the targeted key.
+- key_type: this is the type of the targeted key. Supported values: 0x1 (REG_SZ), 0x4 (REG_DWORD) and 0xB (REG_QWORD).
+- value: this is the desired value that you want to be written in the buffer.
+- value_size: this is the size, in bytes, of the desired value.
+- return: this is the value returned to the calling code. Use 0 for ERROR_SUCCESS.
+
+A complete and working example:
+```
+  - api: "RegEnumValueA"
+    reg_path: "\\REGISTRY\\MACHINE\\SOFTWARE\\WOW6432Node\\TEST\\123\\R2"
+    key_name: "Drive"
+    key_type: 0x1
+    value: "L:\\DIR\\"
+    value_size: 0x8
+    return: 0
+ ```
+ In this example, the target key is named "Drive", is located in "HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\TEST\123\R2",
+ is of type REG_SZ (0x1, i.e., string), the desired value is "L:\DIR\" and the size is 8 bytes (don't forget the '\0' at the end).
+
+ Some things to keep in mind:
+ * Make sure that you use the SAME key type as the one expected by the software you are targeting. 
+ * Make sure that the value size doesn't exceed the buffer size allocated by the software you are targeting.
+ * If you don't want to check the full registry path, you can pass an empty string ("") as reg_path.
+
 ### RegQueryValueExA
 
 RegQueryValueExA signature:

@@ -18,7 +18,7 @@ DiscCheckEmu addresses this issue by allowing users to emulate disc checks, enab
 directly from their hard drives, without physically patching the game executable.
 
 Please note that DiscCheckEmu works only for games and software that employs standard disc checks and/or passive copy protections.
-Old "active" disc-based protections like SafeDisc or SecuROM are not (and will not be) supported by this software. This is due to the nature of these
+Old "active" disc-based protections like SafeDisc or SecuROM are not directly supported by this software. This is due to the nature of these
 protections using segment encryption and IAT obfuscation.
 
 This is a list of copy protections that are known to be successfully handled by DCE:
@@ -65,4 +65,10 @@ Edit DCEConfig.yaml writing a configuration for your target, then run DCELoader.
 * [Microsoft](https://github.com/microsoft): For developing the [Detours](https://github.com/microsoft/Detours) library used in this project.
 * [jbeder](https://github.com/jbeder): For developing the [yaml-cpp](https://github.com/jbeder/yaml-cpp) library used in this project.
 * [gabime](https://github.com/gabime): For developing the [spdlog](https://github.com/gabime/spdlog) library used in this project.
+
+## Projects Using DiscCheckEmu
+
+Here are some open-source projects that are using DiscCheckEmu:
+
+**[SafeDiscLoader](https://github.com/nckstwrt/SafeDiscLoader)**: Allows playing SafeDisc (version 2.7 to the latest 4.9) protected games on modern Windows. SafeDiscLoader utilizes DCEAPIHook.dll to emulate additional disc checks found in many SafeDisc-protected games.
 

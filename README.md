@@ -54,11 +54,13 @@ as a CMake solution. Once loaded, press F7 to build the solution.
 
 ## How to use
 
-Download the latest release from the download section and extract the archive.
+1. Download the latest release from the [download section](https://github.com/Luca1991/DiscCheckEmu/releases) and extract the archive.
 
-Copy DCELoader.exe, DCEAPIHook.dll and DCEConfig.yaml to your game/software installation directory.
+2. Copy DCELoader.exe, DCEAPIHook.dll and DCEConfig.yaml to your game/software installation directory.
 
-Edit DCEConfig.yaml writing a configuration for your target, then run DCELoader.exe and enjoy.
+3. Edit DCEConfig.yaml writing a configuration for your target, then run DCELoader.exe and enjoy.
+
+If you are receiving the **"Missing MSVCP140.dll"** error, make sure to download and install the latest x86 [Microsoft Visual C++ Redistributables](https://aka.ms/vs/17/release/vc_redist.x86.exe).
 
 ## Acknowledgements
 

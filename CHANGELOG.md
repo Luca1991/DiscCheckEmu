@@ -8,6 +8,7 @@
 
 ### Changed
 - API Logger (only in Debug build) is now powered by spdlog.
+- Optimized hooking engine install/uninstall. 
 
 
 ## [0.2.1] - 2024-03-22

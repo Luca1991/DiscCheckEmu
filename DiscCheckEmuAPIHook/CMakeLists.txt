@@ -8,6 +8,7 @@ CPMAddPackage("gh:gabime/spdlog@1.13.0")
 add_library (${PROJECT_NAME} SHARED
 "APIHook.cpp"
 "Config/ConfigParser.cpp"
+"Hook/Engine/Detours/Detours.cpp"
 "Res/Resources.rc"
 "Util/StringUtils.cpp"
 "Util/RegUtils.cpp"

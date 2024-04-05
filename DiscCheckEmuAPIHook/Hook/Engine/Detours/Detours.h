@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright 2024 Luca D'Amico
 
 	This file is part of DiscCheckEmu.
@@ -19,15 +19,16 @@
 
 #pragma once
 
-#include "Config/APIConfig.h"
-#include "Hook/Engine/HookingEngine.h"
-#ifndef NDEBUG
-	#pragma warning(disable : 4996)
-	#include <spdlog/spdlog.h>
-	#pragma warning(default : 4996)
-#else
-	#define SPDLOG_INFO __noop
-#endif
+#include "..\HookingEngine.h"
 
-inline dce::APIConfig apiConfig;
-inline std::unique_ptr<dce::HookingEngine> hookingEngine;
+namespace dce {
+	class Detours : public HookingEngine
+	{
+	private:
+		void installHooks();
+		void uninstallHooks();
+	public:
+		bool init() override;
+		bool deinit() override;
+	};
+}

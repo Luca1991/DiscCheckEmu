@@ -17,76 +17,15 @@
     along with DiscCheckEmu.  If not, see <http://www.gnu.org/licenses/>
 */
 
+
 #include <Windows.h>
-#include <detours/detours.h>
 #include "APIHook.h"
 #include "Config/ConfigParser.h"
-#include "Hook/FindFirstFileA.h"
-#include "Hook/CreateFileA.h"
-#include "Hook/GetDiskFreeSpaceA.h"
-#include "Hook/GetDriveTypeA.h"
-#include "Hook/GetFileAttributesA.h"
-#include "Hook/GetLogicalDrives.h"
-#include "Hook/GetVolumeInformationA.h"
-#include "Hook/mciSendCommand.h"
-#include "Hook/RegEnumValueA.h"
-#include "Hook/RegQueryValueExA.h"
-
-
-void installHooks()
-{
-    if (!apiConfig.fileRedirections.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGFindFirstFileA), HookedFindFirstFileA);
-    if (!apiConfig.getDiskFreeSpaceAConfigs.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGGetDiskFreeSpaceA), HookedGetDiskFreeSpaceA);
-    if (!apiConfig.getDriveAConfigs.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
-    if (!apiConfig.getVolumeInformationAConfigs.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);
-    if(!apiConfig.fileRedirections.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
-    if (!apiConfig.getFileAttributesAConfigs.empty() || !apiConfig.fileRedirections.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
-    if (!apiConfig.mciSendCommandConfigs.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
-    if (!apiConfig.regEnumValueAConfigs.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGRegEnumValueA), HookedRegEnumValueA);
-    if(!apiConfig.regQueryValueExAConfigs.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGRegQueryValueExA), HookedRegQueryValueExA);
-    if (!apiConfig.virtualDrives.empty())
-        DetourAttach(reinterpret_cast<PVOID*>(&OGGetLogicalDrives), HookedGetLogicalDrives);
-}
-
-void uninstallHooks()
-{
-    if (!apiConfig.fileRedirections.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGFindFirstFileA), HookedFindFirstFileA);
-    if (!apiConfig.getDiskFreeSpaceAConfigs.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGGetDiskFreeSpaceA), HookedGetDiskFreeSpaceA);
-    if (!apiConfig.getDriveAConfigs.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
-    if (!apiConfig.getVolumeInformationAConfigs.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);
-    if (!apiConfig.fileRedirections.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
-    if (!apiConfig.getFileAttributesAConfigs.empty() || !apiConfig.fileRedirections.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
-    if (!apiConfig.mciSendCommandConfigs.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGmciSendCommand), HookedmciSendCommand);
-    if (!apiConfig.regEnumValueAConfigs.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGRegEnumValueA), HookedRegEnumValueA);
-    if (!apiConfig.regQueryValueExAConfigs.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGRegQueryValueExA), HookedRegQueryValueExA);
-    if (!apiConfig.virtualDrives.empty())
-        DetourDetach(reinterpret_cast<PVOID*>(&OGGetLogicalDrives), HookedGetLogicalDrives);
-}
+#include "Hook/Engine/Detours/Detours.h"
 
 
 BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_unused]] LPVOID reserved)
 {
-    if (DetourIsHelperProcess()) {
-        return true;
-    }
 
     if (dwReason == DLL_PROCESS_ATTACH) {
 #ifndef NDEBUG
@@ -105,32 +44,28 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_un
             MessageBoxA(nullptr, e.what(), "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
             ExitProcess(1);
         }
+        
+        hookingEngine = std::make_unique<dce::Detours>();
 
-        DetourRestoreAfterWith();
-        DetourTransactionBegin();
-        DetourUpdateThread(GetCurrentThread());
-        
-        installHooks();
-        
-        if (DetourTransactionCommit() != NO_ERROR) {
-            MessageBoxA(nullptr, "Error: DetourTransactionCommit failed", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            ExitProcess(1);
+        if(!hookingEngine->init())
+        {
+			MessageBoxA(nullptr, "Error: Hooking engine failed to initialize", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
+			ExitProcess(1);
         }
         
+        return true;
     }
     else if (dwReason == DLL_PROCESS_DETACH) {
 #ifndef NDEBUG
         FreeConsole();
 #endif
-        DetourTransactionBegin();
-        DetourUpdateThread(GetCurrentThread());
-
-        uninstallHooks();
-
-        if (DetourTransactionCommit() != NO_ERROR) {
-            MessageBoxA(nullptr, "Error: DetourTransactionCommit failed", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            ExitProcess(1);
+        if (!hookingEngine->deinit())
+        {
+            MessageBoxA(nullptr, "Error: Hooking engine failed to deinitialize", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
+			ExitProcess(1);
         }
+
+        return true;
     }
     return true;
 }

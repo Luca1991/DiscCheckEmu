@@ -22,47 +22,49 @@
 #include "APIHook.h"
 #include "Config/ConfigParser.h"
 #include "Hook/Engine/Detours/Detours.h"
+#include "Util/UIUtils.h"
 
 
 BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_unused]] LPVOID reserved)
 {
 
-    if (dwReason == DLL_PROCESS_ATTACH) {
+    if (dwReason == DLL_PROCESS_ATTACH)
+    {
 #ifndef NDEBUG
         AllocConsole();
         FILE* unusedFH;
-        if (freopen_s(&unusedFH, "CONOUT$", "w", stdout) != 0) {
+        if (freopen_s(&unusedFH, "CONOUT$", "w", stdout) != 0)
+        {
             MessageBoxA(nullptr, "Warning: Unable to create logging console", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
         }
 #endif
-        try {
+        try
+        {
             dce::ConfigParser conf = dce::ConfigParser("DCEConfig.yaml");
             apiConfig = conf.parseHooks();
         }
         catch (const std::exception& e)
         {
-            MessageBoxA(nullptr, e.what(), "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-            ExitProcess(1);
+            ui_utils::notifyAndExit(e.what(), "DiscCheckEmu ApiHook");
         }
         
         hookingEngine = std::make_unique<dce::Detours>();
 
         if(!hookingEngine->init())
         {
-			MessageBoxA(nullptr, "Error: Hooking engine failed to initialize", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-			ExitProcess(1);
+            ui_utils::notifyAndExit("Error: Hooking engine failed to initialize", "DiscCheckEmu ApiHook");
         }
         
         return true;
     }
-    else if (dwReason == DLL_PROCESS_DETACH) {
+    else if (dwReason == DLL_PROCESS_DETACH)
+    {
 #ifndef NDEBUG
         FreeConsole();
 #endif
         if (!hookingEngine->deinit())
         {
-            MessageBoxA(nullptr, "Error: Hooking engine failed to deinitialize", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
-			ExitProcess(1);
+            ui_utils::notifyAndExit("Error: Hooking engine failed to deinitialize", "DiscCheckEmu ApiHook");
         }
 
         return true;

@@ -23,6 +23,6 @@
 
 namespace ui_utils {
 
-	[[noreturn]] void notifyAndExit(const std::string& msg, const std::string& title);
+	[[noreturn]] void notifyAndExit(std::string_view msg, std::string_view title);
 
 }

@@ -20,8 +20,8 @@
 #include "UIUtils.h"
 #include <Windows.h>
 
-[[noreturn]] void ui_utils::notifyAndExit(const std::string& msg, const std::string& title) 
+[[noreturn]] void ui_utils::notifyAndExit(std::string_view msg, std::string_view title)
 {
-	 MessageBoxA(nullptr, msg.c_str(), title.c_str(), MB_OK | MB_ICONERROR);
+	 MessageBoxA(nullptr, msg.data(), title.data(), MB_OK | MB_ICONERROR);
 	 ExitProcess(1);
 }

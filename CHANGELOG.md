@@ -5,6 +5,7 @@
 
 ### Added
 - RegEnumValueA hook
+- Ability to pass parameters to the process to be created
 
 ### Changed
 - API Logger (only in Debug build) is now powered by spdlog.

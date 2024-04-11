@@ -25,9 +25,10 @@
 
 namespace dce {
 
-	Injector::Injector(const std::string& targetName, const std::string& dllName)
+	Injector::Injector(const std::string& targetName, const std::string& targetArgs, const std::string& dllName)
 	{
 		this->targetName = targetName;
+		this->targetArgs = targetArgs;
 		this->dllName = dllName;
 	}
 
@@ -39,7 +40,7 @@ namespace dce {
 
 		if (!CreateProcessA(
 			targetName.c_str(),
-			nullptr,
+			targetArgs.empty()? nullptr:const_cast<LPSTR>(targetArgs.c_str()),
 			nullptr,
 			nullptr,
 			false,

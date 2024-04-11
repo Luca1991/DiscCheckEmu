@@ -28,4 +28,11 @@ namespace dce {
 	std::string ConfigParser::getTarget() const {
 		return config["loader"]["target"].as<std::string>();
 	}
+
+	std::string ConfigParser::getArgs() const {
+		if (config["loader"]["args"].IsDefined())
+			return config["loader"]["args"].as<std::string>();
+		else 
+			return "";
+	}
 }

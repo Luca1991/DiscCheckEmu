@@ -27,6 +27,7 @@ namespace dce {
     {
     private:
         std::string targetName;
+        std::string targetArgs;
         std::string dllName;
        
         PROCESS_INFORMATION createTargetProcess();
@@ -35,7 +36,7 @@ namespace dce {
         void checkInjection(PROCESS_INFORMATION);
 
     public:
-        Injector(const std::string& targetName, const std::string& dllName);
+        Injector(const std::string& targetName, const std::string& targetArgs, const std::string& dllName);
         void execute();
     };
 }

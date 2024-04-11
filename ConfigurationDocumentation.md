@@ -152,6 +152,8 @@ In your DCEConfig.yaml files you can use the following commands:
 
 loader->target: defines the process to be created. DCEAPIHook.dll will be injected there.
 
+loader->args: defines the arguments to pass to the process to be created. This is an optional field.
+
 virtual_drives: this is an array of desired fake drives. Adding a lected to this list will automatically reports the presence of such drive when the software calls GetLogicalDrives API.
 
 hooks: this is the list of the desired hooks. Once DCEAPIHook.dll in injected in the target process, every API configured here will be hooked. Multiple hooks for each API are allowed. Please consult the "Supported APIs" part of this document for a list of supported APIs and their allowed parameters and return values.

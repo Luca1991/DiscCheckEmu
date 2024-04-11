@@ -26,11 +26,13 @@ namespace dce {
     class ConfigParser
     {
     private:
-        YAML::Node config;
+		YAML::Node config;
 
     public:
-        ConfigParser(const std::string& fileName);
+		ConfigParser(const std::string& fileName);
 
-        std::string getTarget() const;
+		std::string getTarget() const;
+
+		std::string getArgs() const;
     };
 }

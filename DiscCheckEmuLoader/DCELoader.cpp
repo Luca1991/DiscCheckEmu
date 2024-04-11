@@ -31,7 +31,7 @@ int WINAPI WinMain(
 	try
 	{
 		dce::ConfigParser conf = dce::ConfigParser("DCEConfig.yaml");
-		dce::Injector injector = dce::Injector(conf.getTarget(), "DCEAPIHook.dll");
+		dce::Injector injector = dce::Injector(conf.getTarget(), conf.getArgs(), "DCEAPIHook.dll");
 		injector.execute();
 	}
 	catch (const std::exception& e)

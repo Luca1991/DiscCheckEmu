@@ -1,7 +1,7 @@
 # DiscCheckEmu Changelog
 
 
-## [next] - Unreleased
+## [0.3.0] - 2024-04-12
 
 ### Added
 - RegEnumValueA hook
@@ -10,7 +10,7 @@
 ### Changed
 - API Logger (only in Debug build) is now powered by spdlog.
 - Optimized hooking engine install/uninstall. 
-- Optimized hooking engine for better performance.
+- Optimized injector code for better performance.
 
 
 ## [0.2.1] - 2024-03-22

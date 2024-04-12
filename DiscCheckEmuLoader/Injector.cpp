@@ -115,16 +115,19 @@ namespace dce {
 			throw std::exception("Error: Can't create remote thread");
 		}
 
-		CloseHandle(hRemoteThread);
+		if (WaitForSingleObject(hRemoteThread, 10*1000) != WAIT_OBJECT_0)
+		{
+			TerminateProcess(processInformation.hProcess, 0);
+			throw std::exception("Error: Remote thread execution error");
+		}
 
-		Sleep(3 * 1000);
+		CloseHandle(hRemoteThread);
 
 		ResumeThread(processInformation.hThread);
 	}
 
 	void Injector::checkInjection(PROCESS_INFORMATION processInformation)
 	{
-		Sleep(3 * 1000);
 		std::array<HMODULE, 1024> hModules;
 		DWORD cbNeeded;
 		if(EnumProcessModules(processInformation.hProcess, hModules.data(),

@@ -14,14 +14,13 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Set up MSVC environment
-      uses: microsoft/setup-msbuild@v1
-
-    - name: Configure CMake
-      run: cmake -A Win32 -B build -S .
+      uses: microsoft/setup-msbuild@v2
 
     - name: Build
       run: |
+        cmake -A Win32 -B build -S . -D CMAKE_BUILD_TYPE=Debug
         cmake --build build --config Debug
+        cmake -A Win32 -B build -S . -D CMAKE_BUILD_TYPE=Release
         cmake --build build --config Release
 
     - name: Archive Debug Binaries

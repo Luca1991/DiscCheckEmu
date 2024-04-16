@@ -3,8 +3,10 @@
 </div>
 <br>
 <div align="center">
-  <img src="https://badges.frapsoft.com/os/gpl/gpl.png?v=103">
-  <img src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">
+  <img src="https://img.shields.io/github/v/release/Luca1991/DiscCheckEmu">
+  <img src="https://img.shields.io/github/release-date/Luca1991/DiscCheckEmu">
+    <img src="https://img.shields.io/github/downloads/Luca1991/DiscCheckEmu/total">
+  <img src="https://img.shields.io/github/license/Luca1991/DiscCheckEmu">
 </div>
 
 # DiscCheckEmu

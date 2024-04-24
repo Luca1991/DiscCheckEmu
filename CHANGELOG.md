@@ -1,7 +1,7 @@
 # DiscCheckEmu Changelog
 
 
-## [0.4.0] - Unreleased
+## [0.4.0] - 2024-04-24
 
 ### Added
 - Memory Patches support

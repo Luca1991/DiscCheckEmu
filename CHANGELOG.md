@@ -11,6 +11,7 @@
 - API Logger (only in Debug build) is now powered by spdlog.
 - Optimized hooking engine install/uninstall. 
 - Optimized injector code for better performance.
+- Now using /WX flag in both Debug and Release builds.
 
 
 ## [0.2.1] - 2024-03-22

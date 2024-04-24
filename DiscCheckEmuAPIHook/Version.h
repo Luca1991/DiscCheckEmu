@@ -21,7 +21,7 @@
 
 
 #define VERSION_MAJOR				0
-#define VERSION_MINOR				3
+#define VERSION_MINOR				4
 #define VERSION_BUILD				0
 #define VERSION_PRIVATE				0
 

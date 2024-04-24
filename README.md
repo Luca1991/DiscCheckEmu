@@ -38,7 +38,7 @@ If you are just looking for users pre-made DCEConfig file, go to: https://github
 * Intercept API calls and modify their behavior without patching the executable.
 * File redirection.
 * Virtual Drive definition.
-* In-Memory Patcher
+* In-Memory Patcher.
 * API Logger (only available in Debug builds).
 * Utilize a generic API hooking engine configurable through YAML files.
 * Easy to use injector for automatically creating the target process and injecting the DLL.

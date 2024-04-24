@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "Config/APIConfig.h"
+#include "Hook/Config/APIConfig.h"
 #include "Hook/Engine/HookingEngine.h"
 #ifndef NDEBUG
 	#pragma warning(disable : 4996)

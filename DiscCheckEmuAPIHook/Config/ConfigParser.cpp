@@ -18,7 +18,8 @@
 */
 
 #include "ConfigParser.h"
-#include "../Util/StringUtils.h"
+#include "Util/StringUtils.h"
+#include "Util/MemoryUtils.h"
 
 
 namespace dce {
@@ -160,4 +161,28 @@ namespace dce {
 
 		return apiConfig;
 	}
+
+	std::vector<dce::Patch> ConfigParser::parsePatches()
+	{
+		std::vector<dce::Patch> patches;
+
+		YAML::Node patchesNode = config["patches"];
+
+		for (const auto& patch : patchesNode)
+		{
+			dce::Patch p;
+			if (patch["offset"].IsDefined())
+				p.address = memory_utils::getVAFromOffset(patch["offset"].as<std::uintptr_t>());
+			else if (patch["address"].IsDefined())
+				p.address = patch["address"].as<std::uintptr_t>();
+			else
+				throw std::exception("Error: Patches should have an offset or an address");
+
+			p.bytes = patch["patch"].as<std::vector<std::uint8_t>>();
+			patches.push_back(p);
+		}
+
+		return patches;
+	}
+
 }

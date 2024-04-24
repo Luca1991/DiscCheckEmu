@@ -364,3 +364,45 @@ This is a list of hooks automatically created by DCE:
 * FindFirstFileA: this hook will be automatically created when using the file redirection feature.
 * GetFileAttributesA: this hook will be automatically created when using the file redirection feature.
 * GetLogicalDrives: this hook will be created when at least one virtual drive is specified in virtual_drives array.
+
+## Patches / Hacks
+
+Since version 0.4.0 DCE supports applying patches/hacks to the target process memory.
+This feature is mainly useful in three cases:
+1. to fix bugs that causes the target process to crash or misbehave on recent Windows versions.
+2. to alter some values that are hardcoded in the executable (e.g., to change the supported resolution etc.) 
+3. in some rare cases, when you need to alter the behavior of the target process in a way that can't be achieved using the hooks (e.g., to bypass a check that is not an API call).
+The patches are loaded from the "patches" section of DCEConfig file and are applied to the target process memory after the hooks are set.
+ATTENTION: Patches can make the target process unstable or crash. Use them with caution. Patches are often not compatible with different versions of the same software.
+
+### Patch structure
+
+Each patch is composed by the following fields:
+- address: the virtual address in the target process memory where the patch will be applied. 
+- patch: an array of bytes that will be written to the target process memory.
+OR:
+- offset: the physical file offset where the patch will be applied. This offset will be automatically converted in a virtual address by DCE.
+- patch: an array of bytes that will be written to the target process memory.
+
+For each patch you must specify either the address or the offset field.
+
+### Patch examples
+
+#### Example 1: Patching using file offset
+
+This is an example of a patch that changes 3 bytes starting from file offset 0x178C.
+In this case the offset is automatically converted in a virtual address by DCE.
+```
+patches:
+  - offset: 0x178C
+    patch: [0x41, 0x42, 0x43]
+```
+
+#### Example 2: Patching using a virtual address
+
+This is an example of a patch that changes 3 bytes starting from virtual address 0x0061318C:
+```
+patches:
+  - address: 0x0061318C
+    patch: [0x41, 0x42, 0x43]
+```

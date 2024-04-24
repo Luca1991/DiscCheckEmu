@@ -19,21 +19,12 @@
 
 #pragma once
 
-#include <iostream>
-#include <yaml-cpp/yaml.h>
-#include "Hook/Config/APIConfig.h"
-#include "Hack/Patch.h"
+#include <cstdint>
+#include <vector>
 
-namespace dce {
-	class ConfigParser
-	{
-	private:
-		YAML::Node config;
+namespace memory_utils {
 
-	public:
-		ConfigParser(const std::string& fileName);
+	std::uintptr_t getVAFromOffset(std::uintptr_t offset);
+	void applyPatch(std::uintptr_t address, const std::vector<std::uint8_t>& bytes);
 
-		dce::APIConfig parseHooks();
-		std::vector<dce::Patch> parsePatches();
-	};
 }

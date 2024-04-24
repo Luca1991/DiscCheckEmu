@@ -13,7 +13,7 @@ add_library (${PROJECT_NAME} SHARED
 "Util/StringUtils.cpp"
 "Util/RegUtils.cpp"
 "Util/UIUtils.cpp"
-)
+"Util/MemoryUtils.cpp")
 
 target_link_libraries(${PROJECT_NAME} PRIVATE detours yaml-cpp winmm.lib)
 

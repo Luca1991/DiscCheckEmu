@@ -22,6 +22,7 @@
 #include "APIHook.h"
 #include "Config/ConfigParser.h"
 #include "Hook/Engine/Detours/Detours.h"
+#include "Util/MemoryUtils.h"
 #include "Util/UIUtils.h"
 
 
@@ -38,10 +39,12 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_un
             MessageBoxA(nullptr, "Warning: Unable to create logging console", "DiscCheckEmu ApiHook", MB_OK | MB_ICONERROR);
         }
 #endif
+        std::vector<dce::Patch> patches;
         try
         {
             dce::ConfigParser conf = dce::ConfigParser("DCEConfig.yaml");
             apiConfig = conf.parseHooks();
+            patches = conf.parsePatches();
         }
         catch (const std::exception& e)
         {
@@ -54,6 +57,12 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_un
         {
             ui_utils::notifyAndExit("Error: Hooking engine failed to initialize", "DiscCheckEmu ApiHook");
         }
+
+        for (const auto& patch : patches)
+        {
+            SPDLOG_INFO("--- Applying patch at address: {0:x}", patch.address);
+            memory_utils::applyPatch(patch.address, patch.bytes);
+		}
         
         return true;
     }

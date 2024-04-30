@@ -29,6 +29,9 @@ This is a list of copy protections that are known to be successfully handled by 
 * [Bitpool](https://github.com/TheRogueArchivist/DRML/blob/main/entries/Bitpool/Bitpool.md)
 
 
+> [!IMPORTANT]
+> DiscCheckEmu is *NOT* intended for piracy: you must own the original game/software disc to legally use this tool!
+
 ## DCEConfigs Repository
 
 If you are just looking for users pre-made DCEConfig file, go to: https://github.com/Luca1991/DCEConfigs

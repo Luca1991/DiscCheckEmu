@@ -34,7 +34,7 @@ This is a list of copy protections that are known to be successfully handled by 
 
 ## DCEConfigs Repository
 
-If you are just looking for users pre-made DCEConfig file, go to: https://github.com/Luca1991/DCEConfigs
+If you are just looking for DCEConfig files created by other users, go to: https://github.com/Luca1991/DCEConfigs
 
 ## Features
 

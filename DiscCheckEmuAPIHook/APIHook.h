@@ -22,9 +22,7 @@
 #include "Hook/Config/APIConfig.h"
 #include "Hook/Engine/HookingEngine.h"
 #ifndef NDEBUG
-	#pragma warning(disable : 4996)
 	#include <spdlog/spdlog.h>
-	#pragma warning(default : 4996)
 #else
 	#define SPDLOG_INFO __noop
 #endif

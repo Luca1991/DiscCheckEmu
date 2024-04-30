@@ -3,7 +3,7 @@
 include(../cmake/Detours.cmake)
 
 CPMAddPackage("gh:jbeder/yaml-cpp#0.8.0")
-CPMAddPackage("gh:gabime/spdlog@1.13.0")
+CPMAddPackage("gh:gabime/spdlog@1.14.1")
 
 add_library (${PROJECT_NAME} SHARED
 "APIHook.cpp"

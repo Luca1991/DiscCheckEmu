@@ -19,12 +19,11 @@
 
 #pragma once
 
-#include <cstdint>
 #include <vector>
 
 namespace memory_utils {
 
-	std::uintptr_t getVAFromOffset(std::uintptr_t offset);
-	void applyPatch(std::uintptr_t address, const std::vector<std::uint8_t>& bytes);
+	uint8_t* getVAFromOffset(std::size_t offset);
+	void applyPatch(uint8_t* address, const std::vector<std::uint8_t>& bytes);
 
 }

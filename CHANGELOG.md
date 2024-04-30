@@ -5,6 +5,7 @@
 
 ### Changed
 - Updated spdlog to v1.14.1
+- MemoryUtils and Patch small optimizations
 
 
 ## [0.4.0] - 2024-04-24

@@ -60,7 +60,7 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_un
 
         for (const auto& patch : patches)
         {
-            SPDLOG_INFO("--- Applying patch at address: {0:x}", patch.address);
+            SPDLOG_INFO("--- Applying patch at address: {0}", static_cast<void*>(patch.address));
             memory_utils::applyPatch(patch.address, patch.bytes);
 		}
         

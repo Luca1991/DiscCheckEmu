@@ -23,7 +23,7 @@
 namespace dce {
 	struct Patch
 	{
-		std::uintptr_t address;
+		uint8_t* address;
 		std::vector<std::uint8_t> bytes;
 	};
 }

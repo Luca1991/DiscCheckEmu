@@ -20,8 +20,9 @@
 
 #include "MemoryUtils.h"
 #include <Windows.h>
+#include <Psapi.h>
 
-std::uintptr_t memory_utils::getVAFromOffset(std::uintptr_t offset)
+uint8_t* memory_utils::getVAFromOffset(std::size_t offset)
 {
 	HMODULE hModule = GetModuleHandle(nullptr);
 	if (hModule == nullptr)
@@ -29,10 +30,16 @@ std::uintptr_t memory_utils::getVAFromOffset(std::uintptr_t offset)
 		throw std::exception("GetVAFromOffset error: failed to get module handle");
 	}
 
+	MODULEINFO moduleInfo;
+	if (GetModuleInformation(GetCurrentProcess(), hModule, &moduleInfo, sizeof(moduleInfo)) == 0)
+	{
+		throw std::exception("GetModuleInformation error: failed to get module information");
+	}
+
 	IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(hModule);
 	IMAGE_NT_HEADERS* ntHeader = reinterpret_cast<IMAGE_NT_HEADERS*>(reinterpret_cast<std::uintptr_t>(dosHeader) + dosHeader->e_lfanew);
-	std::uintptr_t imageBase = reinterpret_cast<std::uintptr_t>(hModule);
-	IMAGE_SECTION_HEADER* sectionHeader = reinterpret_cast<IMAGE_SECTION_HEADER*>(reinterpret_cast<std::uintptr_t>(ntHeader) + sizeof(IMAGE_NT_HEADERS));
+	std::uintptr_t imageBase = reinterpret_cast<std::uintptr_t>(moduleInfo.lpBaseOfDll);
+	IMAGE_SECTION_HEADER* sectionHeader = IMAGE_FIRST_SECTION(ntHeader);
 
 	for (int i = 0; i < ntHeader->FileHeader.NumberOfSections; ++i)
 	{
@@ -43,18 +50,18 @@ std::uintptr_t memory_utils::getVAFromOffset(std::uintptr_t offset)
 		if (offset >= sectionOffset && offset < sectionOffset + sectionSize)
 		{
 			DWORD offsetWithinSection = offset - sectionOffset;
-			return imageBase + sectionRVA + offsetWithinSection;
+			return reinterpret_cast<uint8_t*>(imageBase + sectionRVA + offsetWithinSection);
 		}
 	}
 
 	throw std::exception("GetVAFromOffset error: failed to get VA from offset");
 }
 
-void memory_utils::applyPatch(std::uintptr_t address, const std::vector<std::uint8_t>& bytes)
+void memory_utils::applyPatch(uint8_t* address, const std::vector<std::uint8_t>& bytes)
 {
 	DWORD oldProtect;
 	VirtualProtect(reinterpret_cast<void*>(address), bytes.size(), PAGE_EXECUTE_READWRITE, &oldProtect);
-	std::copy_n(bytes.data(), bytes.size(), reinterpret_cast<uint8_t*>(address));
+	std::copy_n(bytes.data(), bytes.size(), address);
 	VirtualProtect(reinterpret_cast<void*>(address), bytes.size(), oldProtect, &oldProtect);
 }
 

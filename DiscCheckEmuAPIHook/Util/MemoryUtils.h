@@ -24,6 +24,7 @@
 namespace memory_utils {
 
 	uint8_t* getVAFromOffset(std::size_t offset);
+	uint8_t* getVAFromRVA(std::uintptr_t rva);
 	void applyPatch(uint8_t* address, const std::vector<std::uint8_t>& bytes);
 
 }

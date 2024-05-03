@@ -173,10 +173,10 @@ namespace dce {
 			dce::Patch p;
 			if (patch["offset"].IsDefined())
 				p.address = memory_utils::getVAFromOffset(patch["offset"].as<std::size_t>());
-			else if (patch["address"].IsDefined())
-				p.address = reinterpret_cast<uint8_t*>(patch["address"].as<std::size_t>());
+			else if (patch["rva"].IsDefined())
+				p.address = memory_utils::getVAFromRVA(patch["rva"].as<std::uintptr_t>());
 			else
-				throw std::exception("Error: Patches should have an offset or an address");
+				throw std::exception("Error: Patches should have an offset or an rva");
 
 			p.bytes = patch["patch"].as<std::vector<std::uint8_t>>();
 			patches.push_back(p);

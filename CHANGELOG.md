@@ -7,6 +7,9 @@
 - Updated spdlog to v1.14.1
 - MemoryUtils and Patch small optimizations
 
+### Changed
+- Patches: now using rva instad of virtual address
+
 
 ## [0.4.0] - 2024-04-24
 

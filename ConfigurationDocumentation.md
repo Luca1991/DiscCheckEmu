@@ -378,13 +378,13 @@ ATTENTION: Patches can make the target process unstable or crash. Use them with 
 ### Patch structure
 
 Each patch is composed by the following fields:
-- address: the virtual address in the target process memory where the patch will be applied. 
+- rva: the relative virtual address in the target process memory where the patch will be applied. This address will be added to the base address of the target process.
 - patch: an array of bytes that will be written to the target process memory.
 OR:
 - offset: the physical file offset where the patch will be applied. This offset will be automatically converted in a virtual address by DCE.
 - patch: an array of bytes that will be written to the target process memory.
 
-For each patch you must specify either the address or the offset field.
+For each patch you must specify either the offset or the rva field.
 
 ### Patch examples
 
@@ -400,9 +400,9 @@ patches:
 
 #### Example 2: Patching using a virtual address
 
-This is an example of a patch that changes 3 bytes starting from virtual address 0x0061318C:
+This is an example of a patch that changes 3 bytes starting from relative virtual address 0x0061318C:
 ```
 patches:
-  - address: 0x0061318C
+  - rva: 0x318D
     patch: [0x41, 0x42, 0x43]
 ```

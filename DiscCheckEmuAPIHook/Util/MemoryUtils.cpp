@@ -33,7 +33,7 @@ uint8_t* memory_utils::getVAFromOffset(std::size_t offset)
 	MODULEINFO moduleInfo;
 	if (GetModuleInformation(GetCurrentProcess(), hModule, &moduleInfo, sizeof(moduleInfo)) == 0)
 	{
-		throw std::exception("GetModuleInformation error: failed to get module information");
+		throw std::exception("GetVAFromOffset error: failed to get module information");
 	}
 
 	IMAGE_DOS_HEADER* dosHeader = reinterpret_cast<IMAGE_DOS_HEADER*>(hModule);
@@ -55,6 +55,24 @@ uint8_t* memory_utils::getVAFromOffset(std::size_t offset)
 	}
 
 	throw std::exception("GetVAFromOffset error: failed to get VA from offset");
+}
+
+uint8_t* memory_utils::getVAFromRVA(std::uintptr_t rva)
+{
+	HMODULE hModule = GetModuleHandle(nullptr);
+	if (hModule == nullptr)
+	{
+		throw std::exception("GetVAFromRVA error: failed to get module handle");
+	}
+
+	MODULEINFO moduleInfo;
+	if (GetModuleInformation(GetCurrentProcess(), hModule, &moduleInfo, sizeof(moduleInfo)) == 0)
+	{
+		throw std::exception("GetVAFromRVA error: failed to get module information");
+	}
+
+	std::uintptr_t imageBase = reinterpret_cast<std::uintptr_t>(moduleInfo.lpBaseOfDll);
+	return reinterpret_cast<uint8_t*>(imageBase + rva);
 }
 
 void memory_utils::applyPatch(uint8_t* address, const std::vector<std::uint8_t>& bytes)

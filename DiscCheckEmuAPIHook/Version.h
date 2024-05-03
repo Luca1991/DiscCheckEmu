@@ -22,7 +22,7 @@
 
 #define VERSION_MAJOR				0
 #define VERSION_MINOR				4
-#define VERSION_BUILD				0
+#define VERSION_BUILD				1
 #define VERSION_PRIVATE				0
 
 #define VER_ORIGINAL_FILENAME		"DCEAPIHook.dll"

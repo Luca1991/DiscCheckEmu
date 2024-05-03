@@ -1,7 +1,7 @@
 # DiscCheckEmu Changelog
 
 
-## [NEXT] - Unreleased
+## [0.4.1] - 2024-05-03
 
 ### Changed
 - Updated spdlog to v1.14.1

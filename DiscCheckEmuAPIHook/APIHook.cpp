@@ -21,6 +21,7 @@
 #include <Windows.h>
 #include "APIHook.h"
 #include "Config/ConfigParser.h"
+#include "Hack/CheatLoop.h"
 #include "Hook/Engine/Detours/Detours.h"
 #include "Util/MemoryUtils.h"
 #include "Util/UIUtils.h"
@@ -40,11 +41,13 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_un
         }
 #endif
         std::vector<dce::Patch> patches;
+        std::vector<dce::Cheat> cheats;
         try
         {
             dce::ConfigParser conf = dce::ConfigParser("DCEConfig.yaml");
             apiConfig = conf.parseHooks();
             patches = conf.parsePatches();
+            cheats = conf.parseCheats();
         }
         catch (const std::exception& e)
         {
@@ -63,7 +66,14 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_un
             SPDLOG_INFO("--- Applying patch at address: {0}", static_cast<void*>(patch.address));
             memory_utils::applyPatch(patch.address, patch.bytes);
 		}
-        
+
+        if(cheats.size() > 0)
+        {
+            SPDLOG_INFO("--- Activating cheats support");
+            dce::runCheatLoop.store(true);
+            cheatThread = std::thread(dce::cheatLoop, cheats);
+        }
+
         return true;
     }
     else if (dwReason == DLL_PROCESS_DETACH)
@@ -74,6 +84,12 @@ BOOL WINAPI DllMain([[maybe_unused]] HINSTANCE hinst, DWORD dwReason, [[maybe_un
         if (!hookingEngine->deinit())
         {
             ui_utils::notifyAndExit("Error: Hooking engine failed to deinitialize", "DiscCheckEmu ApiHook");
+        }
+
+        if (dce::runCheatLoop.load())
+        {
+            dce::runCheatLoop.store(false);
+            cheatThread.join();
         }
 
         return true;

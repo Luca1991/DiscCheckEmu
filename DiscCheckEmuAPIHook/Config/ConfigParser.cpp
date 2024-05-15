@@ -185,4 +185,33 @@ namespace dce {
 		return patches;
 	}
 
+	std::vector<dce::Cheat> ConfigParser::parseCheats()
+	{
+		std::vector<dce::Cheat> cheats;
+
+		YAML::Node cheatsNode = config["cheats"];
+
+		for (const auto& cheat : cheatsNode)
+		{
+			dce::Cheat c;
+			c.hotkey = cheat["vkey"].as<std::uint8_t>();
+			c.address = memory_utils::getVAFromRVA(cheat["rva"].as<std::uintptr_t>());
+			c.cheatBytes = cheat["cheat"].as<std::vector<std::uint8_t>>();
+
+			if (cheat["original_bytes"].IsDefined())
+			{
+				c.isSingleShot = false;
+				c.originalBytes = cheat["original_bytes"].as<std::vector<std::uint8_t>>();
+			}
+			else
+			{
+				c.isSingleShot = true;
+			}
+	
+			cheats.push_back(c);
+		}
+
+		return cheats;
+	}
+
 }

@@ -5,6 +5,7 @@
 
 ### Added
 - Added Cheats support
+- Added directory redirection support
 
 
 ## [0.4.1] - 2024-05-03

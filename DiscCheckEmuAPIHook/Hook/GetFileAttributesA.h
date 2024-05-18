@@ -44,6 +44,18 @@ DWORD WINAPI HookedGetFileAttributesA(LPCSTR lpFileName)
 	{
 		lpFileName = it->second.c_str();
 	}
+	else
+	{
+		for (const auto& [key, value] : apiConfig.directoryRedirections)
+		{
+			if (string_utils::startsWithIgnoreCase(lpFileName, key))
+			{
+				std::string newFileName = value + (lpFileName + key.size());
+				lpFileName = newFileName.c_str();
+				// NOTE: We don't break here because we want to check if there are multiple directory (subdirectory) redirections
+			}
+		}
+	}
 
 	SPDLOG_INFO("<--- GetFileAttributesA({0})", lpFileName);
 

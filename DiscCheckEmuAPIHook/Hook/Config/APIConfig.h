@@ -32,6 +32,7 @@
 namespace dce {
 	struct APIConfig
 	{
+		std::unordered_map<std::string, std::string> directoryRedirections;
 		std::unordered_map<std::string, std::string> fileRedirections;
 		std::vector<dce::GetDiskFreeSpaceAConfig> getDiskFreeSpaceAConfigs;
 		std::vector<dce::GetDriveAConfig> getDriveAConfigs;

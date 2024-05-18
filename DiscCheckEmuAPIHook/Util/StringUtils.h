@@ -25,6 +25,8 @@ namespace string_utils {
 
 	bool areEqualIgnoreCase(const std::string& str1, const std::string& str2);
 
+	bool startsWithIgnoreCase(const std::string& str, const std::string& prefix);
+
 	std::string toLowercase(const std::string& str);
 
 	std::string widestringToString(const std::wstring& wideString);

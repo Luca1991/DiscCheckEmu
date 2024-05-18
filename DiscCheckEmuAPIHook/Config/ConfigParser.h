@@ -23,6 +23,7 @@
 #include <yaml-cpp/yaml.h>
 #include "Hook/Config/APIConfig.h"
 #include "Hack/Patch.h"
+#include "Hack/Cheat.h"
 
 namespace dce {
 	class ConfigParser
@@ -35,5 +36,6 @@ namespace dce {
 
 		dce::APIConfig parseHooks();
 		std::vector<dce::Patch> parsePatches();
+		std::vector<dce::Cheat> parseCheats();
 	};
 }

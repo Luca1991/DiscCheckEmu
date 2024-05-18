@@ -1,4 +1,4 @@
-﻿/*
+/*
 	Copyright 2024 Luca D'Amico
 
 	This file is part of DiscCheckEmu.
@@ -19,15 +19,15 @@
 
 #pragma once
 
-#include <thread>
-#include "Hook/Config/APIConfig.h"
-#include "Hook/Engine/HookingEngine.h"
-#ifndef NDEBUG
-	#include <spdlog/spdlog.h>
-#else
-	#define SPDLOG_INFO __noop
-#endif
 
-inline dce::APIConfig apiConfig;
-inline std::unique_ptr<dce::HookingEngine> hookingEngine;
-inline std::thread cheatThread;
+namespace dce {
+	struct Cheat
+	{
+		uint8_t hotkey;
+		uint8_t* address;
+		std::vector<std::uint8_t> cheatBytes;
+		std::vector<std::uint8_t> originalBytes;
+		bool isSingleShot;
+		bool enabled = false;
+	};
+}

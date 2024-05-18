@@ -406,3 +406,54 @@ patches:
   - rva: 0x318D
     patch: [0x41, 0x42, 0x43]
 ```
+
+## Cheats
+
+Since version 0.5.0 DCE supports cheats. Cheats are like patches, but they are applied to the target process memory at a specific time.
+There are two types of cheats: "SingleShot" and "Toggables".
+SingleShot cheats will just overwrite a memory area once triggered, while Toggables cheats can be enabled and disabled multiple times.
+You can use tools like Cheat Engine to find the memory addresses you want to change and then write the corresponding cheats in the DCEConfig file.
+When a cheat is enabled/disabled, you will hear a sound notification.
+
+### Cheats structure
+
+Cheats are loaded from the "cheats" section of DCEConfig file.
+
+A SingleShot cheat is composed by the following fields:
+- vkey: the virtual key code of the key that will trigger the cheat. You can find a list of virtual key codes [here](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
+- rva: the relative virtual address in the target process memory where the patch will be applied. This address will be added to the base address of the target process.
+- cheat: an array of bytes that will be written to the target process memory.
+
+- A Toggable cheat is composed by the following fields:
+- vkey: the virtual key code of the key that will trigger the cheat. You can find a list of virtual key codes [here](https://docs.microsoft.com/en-us/windows/win32/inputdev/virtual-key-codes).
+- rva: the relative virtual address in the target process memory where the patch will be applied. This address will be added to the base address of the target process.
+- original_bytes: the original bytes that will be restored when the cheat is disabled.
+- cheat: an array of bytes that will be written to the target process memory.
+
+Please note that the only difference between a SingleShot cheat and a Toggable cheat is the presence of the original_bytes field in the Toggable cheat.
+This field is used to store the original bytes that will be restored when the cheat is disabled.
+If you don't specify the original_bytes field, the cheat will be assumed to be SingleShot.
+
+### Cheats examples
+
+#### Example 1: SingleShot cheat
+
+This is an example of a SingleShot cheat that changes 2 bytes starting from relative virtual address 0x64F22C when the "F1" key is pressed:
+```
+  - vkey: 0x70  # F1 key
+    rva: 0x64F22C
+    cheat: [0xAA, 0xBB]
+```
+When the "F1" key is pressed, the bytes at the address 0x64F22C will be changed to 0xAA and 0xBB.
+
+#### Example 2: Toggable cheat
+
+This is an example of a Toggable cheat that changes 6 bytes starting from relative virtual address 0x43F15 when the "F2" key is pressed:
+```
+  - vkey: 0x71  # F2 key
+	rva: 0x43F15
+	original_bytes: [0xFF, 0x0D, 0x2C, 0xF2, 0xA4, 0x00]
+	cheat: [0x90, 0x90, 0x90, 0x90, 0x90, 0x90]
+```
+When the "F2" key is pressed, the bytes at the address 0x43F15 will be changed to 0x90, 0x90, 0x90, 0x90, 0x90 and 0x90.
+When the "F2" key is pressed again, the bytes at the address 0x43F15 will be restored to 0xFF, 0x0D, 0x2C, 0xF2, 0xA4 and 0x00.

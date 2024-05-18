@@ -42,6 +42,7 @@ If you are just looking for DCEConfig files created by other users, go to: https
 * File redirection.
 * Virtual Drive definition.
 * In-Memory Patcher.
+* Cheats support.
 * API Logger (only available in Debug builds).
 * Utilize a generic API hooking engine configurable through YAML files.
 * Easy to use injector for automatically creating the target process and injecting the DLL.

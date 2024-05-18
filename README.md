@@ -40,6 +40,7 @@ If you are just looking for DCEConfig files created by other users, go to: https
 
 * Intercept API calls and modify their behavior without patching the executable.
 * File redirection.
+* Directory redirection.
 * Virtual Drive definition.
 * In-Memory Patcher.
 * Cheats support.

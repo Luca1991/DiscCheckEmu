@@ -37,6 +37,18 @@ HANDLE WINAPI HookedFindFirstFileA(
 	auto it = apiConfig.fileRedirections.find(string_utils::toLowercase(lpFileName));
 	if (it != apiConfig.fileRedirections.end())
 		lpFileName = LPCSTR(it->second.c_str());
+	else
+	{
+		for (const auto& [key, value] : apiConfig.directoryRedirections)
+		{
+			if (string_utils::startsWithIgnoreCase(lpFileName, key))
+			{
+				std::string newFileName = value + lpFileName;
+				lpFileName = LPCSTR(newFileName.c_str());
+				// NOTE: We don't break here because we want to check if there are multiple directory (subdirectory) redirections
+			}
+		}
+	}
 
 	SPDLOG_INFO("<--- FindFirstFileA({0:s}, {1})", lpFileName, "lpFindFileData");
 

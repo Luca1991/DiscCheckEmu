@@ -118,7 +118,41 @@ file_redirections:
 We already covered in the previous example the "loader", "virtual_drive" and "hooks" stuff. Let's focus on the new entry: "file_redirections". This list is used to let DCE know what file access to redirect and where.
 We know that the game will try to access these two files located to the CD-ROM, but since we don't want to keep the original disc inserted, we copied to the game installation directory (we also added a comment to our configuration file to keep it in mind for the future). When we add a source and destination parameters for each of these files , DCE will automatically create an hook against the CreateFileA API, altering on the fly the path of the file being accessed (source) with the destination string. When the game will try to access these two files on the disc, it will actually access the ones copied to the game directory on the HDD.
 
-### Example 3: hooking more APIs
+### Example 2: Directory redirection
+
+Scenario: Let's suppose to have installed a game that during launch check the presence of a CD-ROM labeled "INCREDIBLE_GAME". The main executable of such game is named "IG.exe". The game will load many important files from the CD-ROM "X:\\Stuff\\" directory (where X is the drive letter).
+
+Instead of writing a file redirection rule for each file, we can use the directory-redirection feature of DCE to easily write a DCEConfig.yaml file for this game:
+
+```
+# Remember to copy all files from
+# \Stuff\ directory from the
+# original game disc to the 
+# installation directory!
+
+loader:
+  target: "IG.exe" 
+
+virtual_drives: ['L']
+
+hooks:
+  - api: "GetDriveTypeA"
+    arg1: "L:\\"
+    return: 5 # DRIVE_CDROM
+  - api: "GetVolumeInformationA"
+    arg1: "L:\\"
+    arg2: "INCREDIBLE_GAME"
+    return: true
+
+directory_redirections:
+  - source: "L:\\Stuff\\"
+    destination: ".\\Stuff\\"
+``` 
+
+Like "file_redirections", "directory_redirections" is a list used to let DCE know what directory access to redirect and where.
+Please note that single file reedirections have precedence over directory redirections. This means that if you have a file redirection for a file located in a directory that is also redirected, the file redirection will be used instead of the directory redirection.
+
+### Example 4: hooking more APIs
 
 Scenario: Let's suppose to have installed a game that during launch check the presence of a CD-ROM labeled "SUPER_GAME". The main executable of such game is named "SG.exe". This game is not loading any data from the disc, but it will use a somewhat weird method to check the presence of the original game disc: the mciSendCommand API.
 
@@ -158,7 +192,9 @@ virtual_drives: this is an array of desired fake drives. Adding a lected to this
 
 hooks: this is the list of the desired hooks. Once DCEAPIHook.dll in injected in the target process, every API configured here will be hooked. Multiple hooks for each API are allowed. Please consult the "Supported APIs" part of this document for a list of supported APIs and their allowed parameters and return values.
 
-file_redirections: this is a list of the desired file redirections. Each entry in this list is composed by a source value, ie the original file path that the game uses, and a destination value, ie where the CreateFileA API will be redirected when trying to access such file.
+file_redirections: this is a list of the desired file redirections. Each entry in this list is composed by a source value, ie the original file path that the game uses, and a destination value, ie where the relevant APIs will be redirected when trying to access such file.
+
+directory_redirections: this is a list of the desired directory redirections. Each entry in this list is composed by a source value, ie the original directory path that the game uses, and a destination value, ie where the relevant APIs will be redirected when trying to access such directory.
 
 ## Supported API Hooks
 
@@ -360,9 +396,9 @@ A complete and working example:
 
 This is a list of hooks automatically created by DCE:
 
-* CreateFileA: this hook will be automatically created when using the file redirection feature.
-* FindFirstFileA: this hook will be automatically created when using the file redirection feature.
-* GetFileAttributesA: this hook will be automatically created when using the file redirection feature.
+* CreateFileA: this hook will be automatically created when using the file redirection or directory redirection features.
+* FindFirstFileA: this hook will be automatically created when using the file redirection or directory redirection features.
+* GetFileAttributesA: this hook will be automatically created when using the file redirection or directory redirection features.
 * GetLogicalDrives: this hook will be created when at least one virtual drive is specified in virtual_drives array.
 
 ## Patches / Hacks

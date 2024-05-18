@@ -159,6 +159,14 @@ namespace dce {
 			apiConfig.fileRedirections[source] = destination;
 		}
 
+		YAML::Node directoryRedirections = config["directory_redirections"];
+
+		for (const auto& directoryRedirection : directoryRedirections) {
+			std::string source = string_utils::toLowercase(directoryRedirection["source"].as<std::string>());
+			std::string destination = string_utils::toLowercase(directoryRedirection["destination"].as<std::string>());
+			apiConfig.directoryRedirections[source] = destination;
+		}
+
 		return apiConfig;
 	}
 

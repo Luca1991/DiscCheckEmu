@@ -33,6 +33,17 @@ bool string_utils::areEqualIgnoreCase(const std::string& str1, const std::string
 		});
 }
 
+bool string_utils::startsWithIgnoreCase(const std::string& str, const std::string& prefix)
+{
+	if (str.size() < prefix.size())
+		return false;
+
+	return std::equal(prefix.begin(), prefix.end(), str.begin(), [](char a, char b)
+		{
+			return std::tolower(a) == std::tolower(b);
+		});
+}
+
 std::string string_utils::toLowercase(const std::string& str)
 {
 	std::string result = str;

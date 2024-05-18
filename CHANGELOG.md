@@ -1,7 +1,7 @@
 # DiscCheckEmu Changelog
 
 
-## [NEXT] - Unreleased
+## [0.5.0] - 2024-05-18
 
 ### Added
 - Added Cheats support

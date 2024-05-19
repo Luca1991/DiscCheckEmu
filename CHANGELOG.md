@@ -1,6 +1,12 @@
 # DiscCheckEmu Changelog
 
 
+## [NEXT] - Unreleased
+
+### Fixed
+- Directory redirection: fixed various bugs
+
+
 ## [0.5.0] - 2024-05-18
 
 ### Added

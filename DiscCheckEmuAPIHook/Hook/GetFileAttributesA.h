@@ -39,10 +39,12 @@ DWORD WINAPI HookedGetFileAttributesA(LPCSTR lpFileName)
 		}
 	}
 
+	std::string newFileName (lpFileName);
+
 	auto it = apiConfig.fileRedirections.find(string_utils::toLowercase(lpFileName));
 	if (it != apiConfig.fileRedirections.end())
 	{
-		lpFileName = it->second.c_str();
+		newFileName = it->second;
 	}
 	else
 	{
@@ -50,14 +52,13 @@ DWORD WINAPI HookedGetFileAttributesA(LPCSTR lpFileName)
 		{
 			if (string_utils::startsWithIgnoreCase(lpFileName, key))
 			{
-				std::string newFileName = value + (lpFileName + key.size());
-				lpFileName = newFileName.c_str();
+				newFileName = value + (lpFileName + key.size());
 				// NOTE: We don't break here because we want to check if there are multiple directory (subdirectory) redirections
 			}
 		}
 	}
 
-	SPDLOG_INFO("<--- GetFileAttributesA({0})", lpFileName);
+	SPDLOG_INFO("<--- GetFileAttributesA({0})", LPCSTR(newFileName.c_str()));
 
-	return OGGetFileAttributesA(lpFileName);
+	return OGGetFileAttributesA(LPCSTR(newFileName.c_str()));
 }

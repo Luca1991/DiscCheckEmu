@@ -34,23 +34,24 @@ HANDLE WINAPI HookedFindFirstFileA(
 
 	SPDLOG_INFO("---> FindFirstFileA({0:s}, {1})", lpFileName, "lpFindFileData");
 
+	std::string newFileName(lpFileName);
+
 	auto it = apiConfig.fileRedirections.find(string_utils::toLowercase(lpFileName));
 	if (it != apiConfig.fileRedirections.end())
-		lpFileName = LPCSTR(it->second.c_str());
+		newFileName = it->second;
 	else
 	{
 		for (const auto& [key, value] : apiConfig.directoryRedirections)
 		{
 			if (string_utils::startsWithIgnoreCase(lpFileName, key))
 			{
-				std::string newFileName = value + lpFileName;
-				lpFileName = LPCSTR(newFileName.c_str());
+				newFileName = value + (lpFileName + key.size());
 				// NOTE: We don't break here because we want to check if there are multiple directory (subdirectory) redirections
 			}
 		}
 	}
 
-	SPDLOG_INFO("<--- FindFirstFileA({0:s}, {1})", lpFileName, "lpFindFileData");
+	SPDLOG_INFO("<--- FindFirstFileA({0:s}, {1})", LPCSTR(newFileName.c_str()), "lpFindFileData");
 
-	return OGFindFirstFileA(lpFileName, lpFindFileData);
+	return OGFindFirstFileA(LPCSTR(newFileName.c_str()), lpFindFileData);
 }

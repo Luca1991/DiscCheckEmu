@@ -3,6 +3,9 @@
 
 ## [NEXT] - Unreleased
 
+### Changed
+- Improved GetVolumeInformationA logging
+
 ### Fixed
 - Directory redirection: fixed various bugs
 

@@ -23,10 +23,11 @@ Please note that DiscCheckEmu works only for games and software that employs sta
 Old "active" disc-based protections like SafeDisc or SecuROM are not directly supported by this software. This is due to the nature of these
 protections using segment encryption and IAT obfuscation.
 
-This is a list of copy protections that are known to be successfully handled by DCE:
+This is a list of copy protections, in addition to regular disc checks, that are known to be successfully handled by DCE:
 
-* [engine32](https://github.com/TheRogueArchivist/DRML/blob/main/entries/engine32/engine32.md)
 * [Bitpool](https://github.com/TheRogueArchivist/DRML/blob/main/entries/Bitpool/Bitpool.md)
+* [engine32](https://github.com/TheRogueArchivist/DRML/blob/main/entries/engine32/engine32.md)
+* [phenoProtect](https://github.com/TheRogueArchivist/DRML/blob/main/entries/phenoProtect/phenoProtect.md)
 
 
 > [!IMPORTANT]

@@ -3,6 +3,9 @@
 
 ## [NEXT] - Unreleased
 
+### Added
+- Added phenoProtect to the list of supported protections
+
 ### Changed
 - Improved GetVolumeInformationA logging
 

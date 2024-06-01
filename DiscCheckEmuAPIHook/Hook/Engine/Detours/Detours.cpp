@@ -21,10 +21,12 @@
 #include <detours/detours.h>
 #include "Detours.h"
 #include "Hook/FindFirstFileA.h"
+#include "Hook/FindFirstFileW.h"
 #include "Hook/CreateFileA.h"
 #include "Hook/GetDiskFreeSpaceA.h"
 #include "Hook/GetDriveTypeA.h"
 #include "Hook/GetFileAttributesA.h"
+#include "Hook/GetFileAttributesW.h"
 #include "Hook/GetLogicalDrives.h"
 #include "Hook/GetVolumeInformationA.h"
 #include "Hook/mciSendCommand.h"
@@ -35,15 +37,18 @@ namespace dce {
 	void Detours::installHooks()
 	{
 		if (!apiConfig.fileRedirections.empty() || !apiConfig.directoryRedirections.empty())
+		{
 			DetourAttach(reinterpret_cast<PVOID*>(&OGFindFirstFileA), HookedFindFirstFileA);
+			DetourAttach(reinterpret_cast<PVOID*>(&OGFindFirstFileW), HookedFindFirstFileW);
+			DetourAttach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
+			DetourAttach(reinterpret_cast<PVOID*>(&OGGetFileAttributesW), HookedGetFileAttributesW);
+		}
 		if (!apiConfig.getDiskFreeSpaceAConfigs.empty())
 			DetourAttach(reinterpret_cast<PVOID*>(&OGGetDiskFreeSpaceA), HookedGetDiskFreeSpaceA);
 		if (!apiConfig.getDriveAConfigs.empty())
 			DetourAttach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
 		if (!apiConfig.getVolumeInformationAConfigs.empty())
-			DetourAttach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);
-		if (!apiConfig.fileRedirections.empty() || !apiConfig.directoryRedirections.empty())
-			DetourAttach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
+			DetourAttach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);			
 		if (!apiConfig.getFileAttributesAConfigs.empty() || !apiConfig.fileRedirections.empty() || !apiConfig.directoryRedirections.empty())
 			DetourAttach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
 		if (!apiConfig.mciSendCommandConfigs.empty())
@@ -59,15 +64,18 @@ namespace dce {
 	void Detours::uninstallHooks()
 	{
 		if (!apiConfig.fileRedirections.empty() || !apiConfig.directoryRedirections.empty())
+		{
 			DetourDetach(reinterpret_cast<PVOID*>(&OGFindFirstFileA), HookedFindFirstFileA);
+			DetourDetach(reinterpret_cast<PVOID*>(&OGFindFirstFileW), HookedFindFirstFileW);
+			DetourDetach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
+			DetourDetach(reinterpret_cast<PVOID*>(&OGGetFileAttributesW), HookedGetFileAttributesW);
+		}
 		if (!apiConfig.getDiskFreeSpaceAConfigs.empty())
 			DetourDetach(reinterpret_cast<PVOID*>(&OGGetDiskFreeSpaceA), HookedGetDiskFreeSpaceA);
 		if (!apiConfig.getDriveAConfigs.empty())
 			DetourDetach(reinterpret_cast<PVOID*>(&OGGetDriveTypeA), HookedGetDriveTypeA);
 		if (!apiConfig.getVolumeInformationAConfigs.empty())
-			DetourDetach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);
-		if (!apiConfig.fileRedirections.empty() || !apiConfig.directoryRedirections.empty())
-			DetourDetach(reinterpret_cast<PVOID*>(&OGCreateFileA), HookedCreateFileA);
+			DetourDetach(reinterpret_cast<PVOID*>(&OGGetVolumeInformationA), HookedGetVolumeInformationA);			
 		if (!apiConfig.getFileAttributesAConfigs.empty() || !apiConfig.fileRedirections.empty() || !apiConfig.directoryRedirections.empty())
 			DetourDetach(reinterpret_cast<PVOID*>(&OGGetFileAttributesA), HookedGetFileAttributesA);
 		if (!apiConfig.mciSendCommandConfigs.empty())

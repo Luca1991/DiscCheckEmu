@@ -31,4 +31,6 @@ namespace string_utils {
 
 	std::string widestringToString(const std::wstring& wideString);
 
+	std::wstring stringToWidestring(const std::string& str);
+
 }

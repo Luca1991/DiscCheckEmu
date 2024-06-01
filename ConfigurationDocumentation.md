@@ -398,7 +398,9 @@ This is a list of hooks automatically created by DCE:
 
 * CreateFileA: this hook will be automatically created when using the file redirection or directory redirection features.
 * FindFirstFileA: this hook will be automatically created when using the file redirection or directory redirection features.
+* FindFirstFileW: this hook will be automatically created when using the file redirection or directory redirection features.
 * GetFileAttributesA: this hook will be automatically created when using the file redirection or directory redirection features.
+* GetFileAttributesW: this hook will be automatically created when using the file redirection or directory redirection features.
 * GetLogicalDrives: this hook will be created when at least one virtual drive is specified in virtual_drives array.
 
 ## Patches / Hacks

@@ -66,3 +66,16 @@ std::string string_utils::widestringToString(const std::wstring& wideString)
 	WideCharToMultiByte(CP_UTF8, 0, wideString.data(), static_cast<int>(wideString.size()), result.data(), size_needed, nullptr, nullptr);
 	return result;
 }
+
+std::wstring string_utils::stringToWidestring(const std::string& str)
+{
+	if (str.empty()) return {};
+
+	auto size_needed = MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), nullptr, 0);
+	if (size_needed <= 0)
+		throw std::runtime_error("MultiByteToWideChar() failed: " + std::to_string(size_needed));
+
+	std::wstring result(size_needed, 0);
+	MultiByteToWideChar(CP_UTF8, 0, str.data(), static_cast<int>(str.size()), result.data(), size_needed);
+	return result;
+}

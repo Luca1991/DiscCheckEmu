@@ -7,6 +7,7 @@
 - Added phenoProtect to the list of supported protections
 - GetFileAttributesW and FindFirstFileW hooks. Automatically setup when using file/directory redirections. This is to support some games that use QuickTime videos.
 - stringToWidestring function in MemoryUtils
+- Added Roxxe to the list of supported protections
 
 ### Changed
 - Improved GetVolumeInformationA logging

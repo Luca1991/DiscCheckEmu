@@ -28,6 +28,7 @@ This is a list of copy protections, in addition to regular disc checks, that are
 * [Bitpool](https://github.com/TheRogueArchivist/DRML/blob/main/entries/Bitpool/Bitpool.md)
 * [engine32](https://github.com/TheRogueArchivist/DRML/blob/main/entries/engine32/engine32.md)
 * [phenoProtect](https://github.com/TheRogueArchivist/DRML/blob/main/entries/phenoProtect/phenoProtect.md)
+* [Roxxe](https://github.com/TheRogueArchivist/DRML/blob/main/entries/Roxxe/Roxxe.md)
 
 
 > [!IMPORTANT]

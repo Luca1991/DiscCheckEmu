@@ -1,7 +1,7 @@
 # DiscCheckEmu Changelog
 
 
-## [NEXT] - Unreleased
+## [0.6.0] - 2024-06-07
 
 ### Added
 - Added phenoProtect to the list of supported protections

@@ -53,19 +53,21 @@ BOOL WINAPI HookedGetDiskFreeSpaceA(
 				*lpTotalNumberOfClusters = conf.lpTotalNumberOfClusters;
 
 			SPDLOG_INFO("<--- GetDiskFreeSpaceA({0:s}, 0x{1:x}, 0x{2:x}, 0x{3:x}, 0x{4:x})",
-				lpRootPathName, *lpSectorsPerCluster, *lpBytesPerSector,
-				*lpNumberOfFreeClusters, *lpTotalNumberOfClusters);
+				lpRootPathName, (lpSectorsPerCluster ? *lpSectorsPerCluster : 0), (lpBytesPerSector ? *lpBytesPerSector : 0),
+				(lpNumberOfFreeClusters ? *lpNumberOfFreeClusters : 0), (lpTotalNumberOfClusters ? *lpTotalNumberOfClusters : 0));
 
 			return conf.returnValue;
 		}
 	}
 
-	SPDLOG_INFO("<--- GetDiskFreeSpaceA({0:s}, {1}, {2}, {3}, {4})",
-		lpRootPathName, "lpSectorsPerCluster", "lpBytesPerSector",
-		"lpNumberOfFreeClusters", "lpTotalNumberOfClusters");
-
-	return OGGetDiskFreeSpaceA(lpRootPathName,
+	bool ogResult = OGGetDiskFreeSpaceA(lpRootPathName,
 		lpSectorsPerCluster, lpBytesPerSector,
-		lpNumberOfFreeClusters,	lpTotalNumberOfClusters);
+		lpNumberOfFreeClusters, lpTotalNumberOfClusters);
+
+	SPDLOG_INFO("<--- GetDiskFreeSpaceA({0:s}, 0x{1:x}, 0x{2:x}, 0x{3:x}, 0x{4:x}) | Returning: {5}",
+		lpRootPathName, (lpSectorsPerCluster ? *lpSectorsPerCluster : 0), (lpBytesPerSector ? *lpBytesPerSector : 0),
+		(lpNumberOfFreeClusters ? *lpNumberOfFreeClusters : 0), (lpTotalNumberOfClusters ? *lpTotalNumberOfClusters : 0), ogResult);
+
+	return ogResult;
 	
 }

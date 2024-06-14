@@ -1,6 +1,12 @@
 # DiscCheckEmu Changelog
 
 
+## [NEXT] - Unreleased
+
+### Fixed
+- GetDiskFreeSpaceA logging
+
+
 ## [0.6.0] - 2024-06-07
 
 ### Added
